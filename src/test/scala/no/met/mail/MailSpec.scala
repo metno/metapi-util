@@ -49,6 +49,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
   sequential
 
+  val fromAdr = "from@me"
+  val toAdr = Seq("to@you")
+  val to2Adr = Seq("to@you", "to@you2")
+
+  val ccAdr = Seq("to@some")
+
   val debug = true
   val port = findFreePort()
   val wiser = new Wiser()
@@ -80,13 +86,15 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
       case is: InputStream => println(s"InputStream: Unknown")
       case _ => println("Unknown: Content")
     }
-    //println(s"Sender: $envelopeSender Receiver: $envelopeReceiver")
     println(s"Data: ${new String(msg.getData)}")
     println(s"---------END: $subject -------------------------------")
   }
 
   def checkHeader(header: String, v: String, msg: WiserMessage): Boolean =
-    !msg.getMimeMessage.getHeader(header).filter(_.indexOf(v) >= 0).isEmpty
+    checkHeader(header, v, msg.getMimeMessage)
+
+  def checkHeader(header: String, v: String, msg: MimeMessage): Boolean =
+    !msg.getHeader(header).filter(_.indexOf(v) >= 0).isEmpty
 
   def findMsgId(id: String): Option[WiserMessage] =
     wiser.getMessages.filter(_.getMimeMessage.getMessageID == id).headOption
@@ -101,21 +109,28 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
     wiser.stop
   }
 
-  def checkMail(id: String, subject: String, multiPartCount: Int, debug: Boolean = false): Boolean = {
-    def checkSubject(msg: MimeMessage) = msg.getSubject == subject
-    def checkMultipart(msg: MimeMessage) = multiPartCount == {
+  def checkMail(id: String, subject: String, multiPartCount: Int,
+    from: String = fromAdr, to: Seq[String] = toAdr, debug: Boolean = false)(implicit config: Mail.Config): Boolean = {
+    def checkSubject(implicit msg: MimeMessage) = msg.getSubject == subject
+    def checkAdr(h: String, adr: Seq[String])(implicit msg: MimeMessage) =
+      adr.filter(checkHeader(h, _, msg)).size == adr.size
+    def checkMultipart(implicit msg: MimeMessage) = multiPartCount == {
       msg.getContent match {
         case mp: Multipart => mp.getCount
         case _ => 0
       }
     }
+    def checkBounce(msg: WiserMessage) =
+      config.emailBounce map (msg.getEnvelopeSender.indexOf(_) >= 0) getOrElse (true)
+    def checkReplyTo(msg: WiserMessage) =
+      config.emailReplayto map (checkHeader("Reply-To", _, msg)) getOrElse (true)
 
     findMsgId(id) match {
       case Some(message) =>
-        val envelopeSender: String = message.getEnvelopeSender()
-        val envelopeReceiver: String = message.getEnvelopeReceiver()
-        val msg: MimeMessage = message.getMimeMessage()
-        val list = checkMultipart(msg) :: checkSubject(msg) :: Nil
+        implicit val msg: MimeMessage = message.getMimeMessage()
+        val list = checkMultipart :: checkSubject ::
+          checkAdr("To", to) :: checkAdr("From", Seq(from)) ::
+          checkBounce(message) :: checkReplyTo(message) :: Nil
 
         if (debug) debugPrint(message, subject)
 
@@ -127,13 +142,18 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
   "Sendmail" should {
 
     "send plain emails" in {
-      val ret = Mail.sendPlain(from = "borgem@met.no", to = Seq("boergem@online.no"), subject = "Test1", message = "Test message")
+      val ret = Mail.sendPlain(from = fromAdr, to = toAdr, subject = "Test1", message = "Test message")
       ret must beSuccessfulTry.which(checkMail(_, "Test1", 0))
+    }
+
+   "send plain emails with multiple recipients" in {
+      val ret = Mail.sendPlain(from = fromAdr, to = to2Adr, subject = "Test1a", message = "Test message")
+      ret must beSuccessfulTry.which(checkMail(_, "Test1a", 0, to=to2Adr))
     }
 
     "send simple emails with attachments" in {
       val file = FileSystems.getDefault.getPath("src/test/test.dat")
-      val ret = Mail.sendWithAttachments(from = "borgem@met.no", to = Seq("boergem@online.no"), subject = "Test2", message = "Message with attachments.",
+      val ret = Mail.sendWithAttachments(from = fromAdr, to = toAdr, subject = "Test2", message = "Message with attachments.",
         attachments = Seq(file))
 
       ret must beSuccessfulTry.which(checkMail(_, "Test2", 2))
@@ -142,7 +162,7 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
     "send html formatted emails" in {
       val html =
         """<html><body><h1>Hello</h1>world</body></html>"""
-      val ret = Mail.send(from = "borgem@met.no", to = Seq("boergem@online.no"), subject = "Test3",
+      val ret = Mail.send(from = fromAdr, to = toAdr, subject = "Test3",
         message = "Your email client does not support HTML messages", htmlMessage = Some(html))
 
       ret must beSuccessfulTry.which(checkMail(_, "Test3", 2))
@@ -152,7 +172,7 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
       val file = FileSystems.getDefault.getPath("src/test/test.dat")
       val html =
         """<html><body><h1>Hello</h1>world</body></html>"""
-      val ret = Mail.send(from = "metapi@met.no", to = Seq("someone@out.there"), subject = "Test4",
+      val ret = Mail.send(from = fromAdr, to = toAdr, subject = "Test4",
         message = "Your email client does not support HTML messages", htmlMessage = Some(html),
         attachments = Seq(file))
 
@@ -161,7 +181,7 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
 
     "send simple emails with cc, replyTo and bounce set" in {
       implicit val config = Mail.Config(Some("localhost"), port, Some("bounce@met.no"), Some("replayto@met.no"))
-      val ret = Mail.sendPlain(from = "borgem@met.no", to = Seq("boergem@online.no"),
+      val ret = Mail.sendPlain(from = fromAdr, to = toAdr,
         cc = Seq("cc@met.no"), subject = "Test5", message = "Test message")
       val msg = ret.map(findMsgId(_)).getOrElse(None)
       msg must beSome
@@ -169,17 +189,17 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
       checkHeader("Reply-To", "replayto@met.no", msg.get) mustEqual true
       checkHeader("Cc", "cc@met.no", msg.get) mustEqual true
 
-      ret must beSuccessfulTry.which(checkMail(_, "Test5", 0, true))
+      ret must beSuccessfulTry.which(checkMail(_, "Test5", 0))
     }
 
     "send emails should fail if missing config emailHost" in {
       implicit val config = Mail.Config(None)
-      val ret = Mail.sendPlain(from = "from@met.no", to = Seq("to@met.no"), subject = "Test6", message = "Test message")
+      val ret = Mail.sendPlain(from = fromAdr, to = toAdr, subject = "Test6", message = "Test message")
       ret must beFailedTry
     }
 
     "send emails asynchronously" in {
-      val ret = Mail.sendAsync(from = "from@met.no", to = Seq("to@met.no"), subject = "Test7", message = "Test message")
+      val ret = Mail.sendAsync(from = fromAdr, to = toAdr, subject = "Test7", message = "Test message")
       ret map { _ must beSuccessfulTry } await
     }
   }
