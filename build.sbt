@@ -18,8 +18,6 @@ publishTo := {
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
-EclipseKeys.eclipseOutput := Some(".eclipse_build")
-
 scalaVersion := "2.11.6"
 
 ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true
@@ -43,10 +41,8 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.12" % "test"
 )
 
-
 resolvers ++= Seq(
   "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
-  "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
   "sonatype-releases" at "http://oss.sonatype.org/content/repositories/releases/",
   "sonatype-central" at "https://repo1.maven.org/maven2"
 )
