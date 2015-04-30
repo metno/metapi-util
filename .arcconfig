@@ -1,5 +1,6 @@
 {
     "project.name" : "met-api",
     "phabricator.uri": "https://phab.met.no",
-    "unit.engine": "SBTTestEngine"
+    "unit.engine": "SBTTestEngine",
+    "unit.engine.sbt.report-dirs": ["target/test-reports"]
 }
