@@ -5,7 +5,7 @@ Provides a simple way to send emails.
 
 Ex.
 
-'''scala
+```scala
 import no.met.mail._
 import scala.util.{Success, Failure}
 
@@ -22,4 +22,4 @@ object test {
     case Failure(e) => println(s"Failed: ${e.getMessage}")
   }
 }
-'''
+```
