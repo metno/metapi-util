@@ -35,7 +35,7 @@ ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := """
 libraryDependencies ++= Seq(
   "com.github.scopt" %% "scopt" % "3.3.0",
   "commons-email" % "commons-email" % "1.1",
-  "org.slf4j" % "slf4j-log4j12" % "1.7.12", 
+  "org.slf4j" % "slf4j-log4j12" % "1.7.12",
   "commons-logging" % "commons-logging" % "1.2",
   "org.specs2" %% "specs2-core" % "3.4" % "test",
   "org.specs2" %% "specs2-junit" % "3.4" % "test",
@@ -44,7 +44,7 @@ libraryDependencies ++= Seq(
 )
 
 
-resolvers ++= Seq( 
+resolvers ++= Seq(
   "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
   "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
   "sonatype-releases" at "http://oss.sonatype.org/content/repositories/releases/",

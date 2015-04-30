@@ -35,14 +35,15 @@ import java.nio.file.Path
 import java.nio.file.Files
 
 import scala.util.{ Try, Success, Failure }
-import scala.util.Failure
 import org.subethamail.wiser._
 import javax.mail.internet.MimeMessage
 import javax.mail.Multipart
-//import util.Mail
 import scala.collection.JavaConversions._
 import java.io.InputStream
 import scala.concurrent.ExecutionContext.Implicits.global
+
+//scalastyle:off public.methods.have.type
+//scalastyle:off regex
 
 @RunWith(classOf[JUnitRunner])
 class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
@@ -158,10 +159,10 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
       ret must beSuccessfulTry.which(checkMail(_, "Test4", 3))
     }
 
-    "send simple emails with cc, bcc, replyTo and bounce set" in {
+    "send simple emails with cc, replyTo and bounce set" in {
       implicit val config = Mail.Config(Some("localhost"), port, Some("bounce@met.no"), Some("replayto@met.no"))
       val ret = Mail.sendPlain(from = "borgem@met.no", to = Seq("boergem@online.no"),
-        cc = Seq("cc@met.no"), bcc = Seq("bcc@met.no"), subject = "Test5", message = "Test message")
+        cc = Seq("cc@met.no"), subject = "Test5", message = "Test message")
       val msg = ret.map(findMsgId(_)).getOrElse(None)
       msg must beSome
 

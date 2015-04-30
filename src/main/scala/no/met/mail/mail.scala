@@ -44,7 +44,7 @@ object Mail {
    * Configuration for the email methods.
    */
   case class Config(val emailHost: Option[String],
-    val emailPort: Option[Long]=Some(25),
+    val emailPort: Option[Long] = Some(25), // scalastyle:ignore
     val emailBounce: Option[String] = None,
     val emailReplayto: Option[String] = None)
 
@@ -52,18 +52,19 @@ object Mail {
    *  An implicit that use application.conf to set the configuration
    *  parameters.
    */
-//  implicit val config = Config(Play.configuration.getString("email.host"),
-//    Play.configuration.getLong("email.smtp.port"),
-//    Play.configuration.getString("email.bounce"),
-//    Play.configuration.getString("email.replayto"))
+  //  implicit val config = Config(Play.configuration.getString("email.host"),
+  //    Play.configuration.getLong("email.smtp.port"),
+  //    Play.configuration.getString("email.bounce"),
+  //    Play.configuration.getString("email.replayto"))
 
   private def doSend(
-    from: String, to: Seq[String], cc: Seq[String] = Seq.empty, bcc: Seq[String] = Seq.empty,
+    from: String, to: Seq[String], cc: Seq[String] = Seq.empty,
     subject: String, email: Email)(implicit config: Config): Try[String] = Try {
     import config._
 
-    if (emailHost.isEmpty)
+    if (emailHost.isEmpty) {
       throw new Exception("email: No smtp server is configured. (email.host)")
+    }
 
     email.setHostName(config.emailHost.get)
 
@@ -73,7 +74,6 @@ object Mail {
 
     to foreach (email.addTo(_))
     cc foreach (email.addCc(_))
-    bcc foreach (email.addBcc(_))
     emailBounce foreach (email.setBounceAddress(_))
     emailReplayto foreach (email.addReplyTo(_))
     email.send
@@ -96,9 +96,8 @@ object Mail {
    *  @param attachments, paths to any attachments.
    *  @return Try[String], an message id on success and None on failure.
    */
-
   def send(
-    from: String, to: Seq[String], cc: Seq[String] = Seq.empty, bcc: Seq[String] = Seq.empty,
+    from: String, to: Seq[String], cc: Seq[String] = Seq.empty,
     subject: String, message: String, htmlMessage: Option[String] = None,
     attachments: Seq[Path] = Seq.empty)(implicit config: Config): Try[String] = {
 
@@ -128,7 +127,7 @@ object Mail {
         m.setMsg(message)
     }
 
-    doSend(from, to, cc, bcc, subject, email)
+    doSend(from, to, cc, subject, email)
   }
 
   /**
@@ -137,9 +136,9 @@ object Mail {
    * @see send
    */
   def sendWithAttachments(
-    from: String, to: Seq[String], cc: Seq[String] = Seq.empty, bcc: Seq[String] = Seq.empty,
+    from: String, to: Seq[String], cc: Seq[String] = Seq.empty,
     subject: String, message: String, attachments: Seq[Path])(implicit config: Config): Try[String] = {
-    send(from, to, cc, bcc, subject, message, None, attachments)
+    send(from, to, cc, subject, message, None, attachments)
   }
 
   /**
@@ -148,9 +147,9 @@ object Mail {
    * @see send
    */
   def sendPlain(
-    from: String, to: Seq[String], cc: Seq[String] = Seq.empty, bcc: Seq[String] = Seq.empty,
+    from: String, to: Seq[String], cc: Seq[String] = Seq.empty,
     subject: String, message: String)(implicit config: Config): Try[String] = {
-    send(from, to, cc, bcc, subject, message, None, Seq.empty)
+    send(from, to, cc, subject, message, None, Seq.empty)
   }
 
   /**
@@ -158,7 +157,7 @@ object Mail {
    * @see send
    */
   def sendAsync(
-    from: String, to: Seq[String], cc: Seq[String] = Seq.empty, bcc: Seq[String] = Seq.empty,
+    from: String, to: Seq[String], cc: Seq[String] = Seq.empty,
     subject: String, message: String, htmlMessage: Option[String] = None,
-    attachments: Seq[Path] = Seq.empty)(implicit config: Config): Future[Try[String]] = Future(send(from, to, cc, bcc, subject, message, htmlMessage, attachments))
+    attachments: Seq[Path] = Seq.empty)(implicit config: Config): Future[Try[String]] = Future(send(from, to, cc, subject, message, htmlMessage, attachments))
 }
