@@ -34,7 +34,7 @@ ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := """
 
 libraryDependencies ++= Seq(
   "com.github.scopt" %% "scopt" % "3.3.0",
-  "commons-email" % "commons-email" % "1.1",
+  "org.apache.commons" % "commons-email" % "1.1",
   "org.slf4j" % "slf4j-log4j12" % "1.7.12",
   "commons-logging" % "commons-logging" % "1.2",
   "org.specs2" %% "specs2-core" % "3.4" % "test",
