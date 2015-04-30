@@ -12,3 +12,6 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.4")
 
 //Scalastyle Plugin
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.6.0")
+
+//eclipse plugin
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "3.0.0")
