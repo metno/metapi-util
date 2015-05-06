@@ -46,7 +46,7 @@ object Mail {
   case class Config(val emailHost: Option[String],
     val emailPort: Option[Long] = Some(25), // scalastyle:ignore
     val emailBounce: Option[String] = None,
-    val emailReplayto: Option[String] = None)
+    val emailReplyto: Option[String] = None)
 
   /**
    *  An implicit that use application.conf to set the configuration
@@ -55,7 +55,7 @@ object Mail {
   //  implicit val config = Config(Play.configuration.getString("email.host"),
   //    Play.configuration.getLong("email.smtp.port"),
   //    Play.configuration.getString("email.bounce"),
-  //    Play.configuration.getString("email.replayto"))
+  //    Play.configuration.getString("email.replyto"))
 
   private def doSend(
     from: String, to: Seq[String], cc: Seq[String] = Seq.empty,
@@ -75,7 +75,7 @@ object Mail {
     to foreach (email.addTo(_))
     cc foreach (email.addCc(_))
     emailBounce foreach (email.setBounceAddress(_))
-    emailReplayto foreach (email.addReplyTo(_))
+    emailReplyto foreach (email.addReplyTo(_))
     email.send
   }
 

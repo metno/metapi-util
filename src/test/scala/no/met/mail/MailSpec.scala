@@ -123,7 +123,7 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
     def checkBounce(msg: WiserMessage) =
       config.emailBounce map (msg.getEnvelopeSender.indexOf(_) >= 0) getOrElse (true)
     def checkReplyTo(msg: WiserMessage) =
-      config.emailReplayto map (checkHeader("Reply-To", _, msg)) getOrElse (true)
+      config.emailReplyto map (checkHeader("Reply-To", _, msg)) getOrElse (true)
 
     findMsgId(id) match {
       case Some(message) =>
