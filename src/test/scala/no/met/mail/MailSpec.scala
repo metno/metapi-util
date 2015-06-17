@@ -152,7 +152,7 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
     }
 
     "send simple emails with attachments" in {
-      val file = FileSystems.getDefault.getPath("src/test/test.dat")
+      val file = FileSystems.getDefault.getPath("src/test/resources/test.dat")
       val ret = Mail.sendWithAttachments(from = fromAdr, to = toAdr, subject = "Test2", message = "Message with attachments.",
         attachments = Seq(file))
 
@@ -169,7 +169,7 @@ class MailSpec extends mutable.Specification with specification.BeforeAfterAll {
     }
 
     "send html formatted emails with attachments" in {
-      val file = FileSystems.getDefault.getPath("src/test/test.dat")
+      val file = FileSystems.getDefault.getPath("src/test/resources/test.dat")
       val html =
         """<html><body><h1>Hello</h1>world</body></html>"""
       val ret = Mail.send(from = fromAdr, to = toAdr, subject = "Test4",

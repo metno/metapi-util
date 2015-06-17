@@ -7,6 +7,9 @@ resolvers ++= Seq(
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.6.4")
 
+// Play plugin
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.9")
+
 //Test plugins
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.4")
 
