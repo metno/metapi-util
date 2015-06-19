@@ -34,7 +34,7 @@ import java.net.URL
 /**
  * Various json formatting methods that are useful for all data.met.no services.
  */
-class BasicMetapiJsonFormat {
+class BasicMetApiJsonFormat {
 
   private val dateTimeZFormatter = new DateTimeFormatterBuilder()
     .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
