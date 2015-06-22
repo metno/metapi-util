@@ -35,6 +35,8 @@ ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := """
 """
 
 libraryDependencies ++= Seq(
+  "com.typesafe.play" %% "play-json" % "2.3.9",
+  "org.json4s" %% "json4s-native" % "3.2.11",
   "com.github.scopt" %% "scopt" % "3.3.0",
   "com.github.nscala-time" %% "nscala-time" % "2.0.0",
   "org.apache.commons" % "commons-email" % "1.1",
