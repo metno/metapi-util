@@ -46,7 +46,8 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-junit" % "3.4" % "test",
   "org.subethamail" % "subethasmtp" % "3.1.7" % "test",
   "junit" % "junit" % "4.12" % "test",
-  "com.typesafe.play" %% "play" % "2.3.9"
+  "com.typesafe.play" %% "play" % "2.3.9",
+  "com.typesafe.play" %% "play-test" % "2.3.9"
 )
 
 resolvers ++= Seq(

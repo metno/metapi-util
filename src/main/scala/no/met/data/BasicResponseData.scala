@@ -53,7 +53,7 @@ object BasicResponseData {
   /**
    * Simplest construction of BasicResponseData structure
    */
-  def apply[A]( // scalastyle:ignore
+  def apply( // scalastyle:ignore
     contextType: String,
     id: String,
     apiVersion: String,
@@ -63,7 +63,7 @@ object BasicResponseData {
     itemsPerPage: Long = 1,
     startOffset: Long = 0,
     nextLink: Option[URL] = None,
-    previousLink: Option[URL] = None)(implicit request: Request[A]): BasicResponseData = {
+    previousLink: Option[URL] = None)(implicit request: RequestHeader): BasicResponseData = {
     new BasicResponseData(
       new URL("https://data.met.no/schema/"),
       contextType,
