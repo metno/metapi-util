@@ -33,7 +33,7 @@ import com.github.nscala_time.time.Imports._
 /**
  * Functionality to provide error messages as json output
  */
-class ErrorJsonFormat extends BasicMetapiJsonFormat {
+class ErrorJsonFormat extends BasicJsonFormat {
 
   /**
    * Basic error information
