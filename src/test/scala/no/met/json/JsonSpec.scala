@@ -68,7 +68,7 @@ class JsonSpec extends mutable.Specification {
 
       JsonHelper.Parser.parse(TestJson.fileName, path.get, v.populate _)
 
-      val js: JsArray = (TestJson.testJson \ "features") match {
+      val js: JsArray = (TestJson.testJson \ "features").as[JsValue] match {
         case a: JsArray => a
         case _ => new JsArray
       }
@@ -82,7 +82,7 @@ class JsonSpec extends mutable.Specification {
 
       JsonHelper.Parser.parse(TestJson.fileName, path.get, v.populate _)
       val js = (TestJson.testJson \ "features")(1) \ "geometry" \ "coordinates"
-      v.acc(0) must beEqualTo(js)
+      v.acc(0) must beEqualTo(js.as[JsValue])
     }
 
     "'/' should give the the complete json." in {
