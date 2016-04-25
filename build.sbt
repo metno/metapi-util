@@ -1,45 +1,18 @@
-name := """util"""
-
 organization := "no.met.data"
-
+name := """util"""
 version := "0.2-SNAPSHOT"
+description := "Utility code used by the metapi."
+homepage :=  Some(url(s"https://github.com/metno"))
+licenses += "GPL-2.0" -> url("https://www.gnu.org/licenses/gpl-2.0.html")
 
-licenses += "GPLv2" -> url("https://www.gnu.org/licenses/gpl-2.0.html")
-
-description := "Utilities used by the metapi."
-
-publishTo := {
-  val nexus = "http://maven.met.no/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-}
-
-credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
-
+// Scala settings
+// ----------------------------------------------------------------------
+scalaVersion := "2.11.8"
+scalacOptions ++= Seq("-deprecation", "-feature")
 lazy val root = (project in file("."))
 
-scalaVersion := "2.11.6"
-
-
-// Test Settings
-javaOptions += "-Djunit.outdir=target/test-report"
-
-ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true
-
-ScoverageSbtPlugin.ScoverageKeys.coverageMinimum := 95
-
-ScoverageSbtPlugin.ScoverageKeys.coverageFailOnMinimum := true
-
-ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := """
-  <empty>;
-"""
-
-scalacOptions in Test ++= Seq("-Yrangepos")
-
-
 // Dependencies
+// ----------------------------------------------------------------------
 libraryDependencies ++= Seq(
  "com.typesafe.play" %% "play-json" % "2.4.1",
  "org.json4s" %% "json4s-native" % "3.2.11",
@@ -61,3 +34,39 @@ resolvers ++= Seq(
   "sonatype-releases" at "http://oss.sonatype.org/content/repositories/releases/",
   "sonatype-central" at "https://repo1.maven.org/maven2"
 )
+
+// Publish Settings
+// ----------------------------------------------------------------------
+publishTo := {
+  val jfrog = "https://oss.jfrog.org/artifactory/"
+  if (isSnapshot.value)
+    Some("Artifactory Realm" at jfrog + "oss-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
+  else
+    Some("Artifactory Realm" at jfrog + "oss-release-local")
+}
+pomExtra := (
+  <scm>
+    <url>https://github.com/metno/metapi-{name.value}.git</url>
+    <connection>scm:git:git@github.com:metno/metapi-{name.value}.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>metno</id>
+      <name>Meteorological Institute, Norway</name>
+      <url>http://www.github.com/metno</url>
+    </developer>
+  </developers>)
+bintrayReleaseOnPublish := false
+publishArtifact in Test := false
+
+
+// Testing
+// ----------------------------------------------------------------------
+javaOptions += "-Djunit.outdir=target/test-report"
+scalacOptions in Test ++= Seq("-Yrangepos")
+coverageHighlighting := true
+coverageMinimum := 95
+coverageFailOnMinimum := true
+coverageExcludedPackages := """
+  <empty>;
+"""

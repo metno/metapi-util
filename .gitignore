@@ -4,10 +4,15 @@
 /project/project/
 /project/target/
 /target/
-.eclipse_build
+/.idea
+/.idea_modules
+/*.iml
+/.eclipse_build
 /.cache
 /.classpath
 /.project
+/.settings/
 /.worksheet/
 /bin
+/.cache*
 *~
