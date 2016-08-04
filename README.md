@@ -1,6 +1,14 @@
 # metapi-util-scala
 
-## Send mail
+metapi-util-scala provides some basic functionality that is used across all
+modules in the API.
+
+## BasicJsonFormat
+
+Provides header elements + some common readers and writers for the standard
+Json format.
+
+## Send mail (Deprecated)
 Provides a simple way to send emails.
 
 Ex.

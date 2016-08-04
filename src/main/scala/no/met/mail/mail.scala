@@ -38,6 +38,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.Collections.SetFromMap
 import scala.util.Failure
 
+/**
+ * This functionality is currently deprecated. Before taking the class into use, go
+ * through the tests and fix them up.
+ */
+@deprecated(message="Currently not well-tested. Fix tests before using.", since="2016-08-01")
 object Mail {
 
   /**

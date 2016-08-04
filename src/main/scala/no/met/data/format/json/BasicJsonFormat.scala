@@ -25,6 +25,7 @@
 
 package no.met.data.format.json
 
+import scala.language.postfixOps
 import play.api.libs.json._
 import no.met.data._
 import com.github.nscala_time.time.Imports._

@@ -1,6 +1,6 @@
 organization := "no.met.data"
 name := """util"""
-version := "0.2-SNAPSHOT"
+version := "0.3-SNAPSHOT"
 description := "Utility code used by the metapi."
 homepage :=  Some(url(s"https://github.com/metno"))
 licenses += "GPL-2.0" -> url("https://www.gnu.org/licenses/gpl-2.0.html")
@@ -14,25 +14,22 @@ lazy val root = (project in file("."))
 // Dependencies
 // ----------------------------------------------------------------------
 libraryDependencies ++= Seq(
- "com.typesafe.play" %% "play-json" % "2.4.1",
- "org.json4s" %% "json4s-native" % "3.2.11",
- "com.github.scopt" %% "scopt" % "3.3.0",
- "com.github.nscala-time" %% "nscala-time" % "2.0.0",
- "org.apache.commons" % "commons-email" % "1.1",
- "org.slf4j" % "slf4j-log4j12" % "1.7.12",
+ "com.typesafe.play" %% "play" % "2.4.8",
+ "com.typesafe.play" %% "play-test" % "2.4.8",
+ "com.typesafe.play" %% "play-json" % "2.4.8",
+ "org.json4s" %% "json4s-native" % "3.4.0",
+ "com.github.scopt" %% "scopt" % "3.5.0",
+ "com.github.nscala-time" %% "nscala-time" % "2.12.0",
+ "org.apache.commons" % "commons-email" % "1.4",
+ "org.slf4j" % "slf4j-log4j12" % "1.7.21",
  "commons-logging" % "commons-logging" % "1.2",
- "org.specs2" %% "specs2-core" % "3.4" % "test",
- "org.specs2" %% "specs2-junit" % "3.4" % "test",
  "org.subethamail" % "subethasmtp" % "3.1.7" % "test",
  "junit" % "junit" % "4.12" % "test",
- "com.typesafe.play" %% "play" % "2.4.1",
- "com.typesafe.play" %% "play-test" % "2.4.1"
+  specs2 % Test
 )
 
 resolvers ++= Seq(
-  "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
-  "sonatype-releases" at "http://oss.sonatype.org/content/repositories/releases/",
-  "sonatype-central" at "https://repo1.maven.org/maven2"
+  "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 )
 
 // Publish Settings
