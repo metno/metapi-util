@@ -27,6 +27,7 @@ package no.met.data
 
 object ApiConstants {
   final val METAPI_CONTEXT="https://data.met.no/schema/"
+  final val METAPI_LICENSE="http://met.no/English/Data_Policy_and_Data_Services/"
   final val CONTEXT_NAME="@context"
   final val CONTEXT="The Json-LD context."
   final val RESPONSE_TYPE_NAME="@type"
@@ -34,7 +35,6 @@ object ApiConstants {
   final val API_VERSION="The version of the API that generated this response."
   final val API_VERSION_EXAMPLE="v0"
   final val LICENSE="The license that applies to this content."
-  final val LICENSE_EXAMPLE="http://met.no/English/Data_Policy_and_Data_Services/"
   final val CREATED_AT="The time at which this document was created (RFC 3339)."
   final val CREATED_AT_EXAMPLE="2007-11-06T16:34:41.000Z"
   final val QUERY_TIME="The time, in seconds, that this document took to generate."
