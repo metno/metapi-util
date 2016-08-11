@@ -42,7 +42,7 @@ class BasicJsonFormat {
     .appendTimeZoneOffset("Z", false, 2, 2)
     .toFormatter()
 
-  def urlWrites: Writes[URL] = new Writes[URL] {
+  implicit val urlWrites: Writes[URL] = new Writes[URL] {
     def writes(u: URL): JsValue = JsString(u.toString)
   }
 
