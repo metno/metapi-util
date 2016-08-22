@@ -33,7 +33,7 @@ abstract class Geometry(
 )
 
 case class Point(
-  @(ApiModelProperty @field)(value="Coordinates of the geometry object", example="59.9423, 10.72") coordinates: Array[Double]
+  @(ApiModelProperty @field)(value="Coordinates of the geometry object", example="59.9423, 10.72") coordinates: Seq[Double]
 ) extends Geometry("Point") { 
   
   def asWkt:String = {
