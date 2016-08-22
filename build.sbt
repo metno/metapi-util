@@ -23,6 +23,7 @@ libraryDependencies ++= Seq(
  "org.apache.commons" % "commons-email" % "1.4",
  "org.slf4j" % "slf4j-log4j12" % "1.7.21",
  "commons-logging" % "commons-logging" % "1.2",
+  "io.swagger" %% "swagger-play2" % "1.5.2",
  "org.subethamail" % "subethasmtp" % "3.1.7" % "test",
  "junit" % "junit" % "4.12" % "test",
   specs2 % Test
