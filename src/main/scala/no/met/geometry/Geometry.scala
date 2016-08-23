@@ -28,15 +28,10 @@ package no.met.geometry
 import io.swagger.annotations._
 import scala.annotation.meta.field
 
-abstract class Geometry(
-  geomType: String
-)
-
 case class Point(
-  @(ApiModelProperty @field)(name="@type", value="The type of the geometry object", example="POINT") geomType: String,
+  @(ApiModelProperty @field)(name="@type", value="The type of the geometry object", example="Point") geomType: String,
   @(ApiModelProperty @field)(value="Coordinates of the geometry object", example="59.9423, 10.72") coordinates: Seq[Double]
-) extends Geometry("Point") { 
-  
+) { 
   def asWkt:String = {
     val coordx = coordinates(0)
     val coordy = coordinates(1)

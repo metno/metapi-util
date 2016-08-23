@@ -36,7 +36,7 @@ class GeometrySpec extends Specification {
 
   "Point object" should {
     "return valid WKT" in {
-      new Point(Seq(54.5, 10.2)).toString mustEqual("POINT(54.5 10.2)")
+      Point("Point", Seq(54.5, 10.2)).toString mustEqual("POINT(54.5 10.2)")
     }
   }
 }
