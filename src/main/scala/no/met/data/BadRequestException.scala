@@ -31,16 +31,16 @@ import com.github.nscala_time.time.Imports._
 /**
  * Throwing this exception is a signal to a controller that it should return
  * Bad Request. Any other exceptions should return Internal Server Error.
- *
- * @param message The error message to use
+ * @param start  The start time of this session
+ * @param reason The reason for the error that this user has encountered.
  * @param help Extra information regarding the error, that may be useful to a user
  * @param headers Extra headers that should be included in a response with this error
  */
-class BadRequestException(message: String,
+class BadRequestException(
   start: DateTime,
+  reason: String,
   val help: Option[String] = None,
-  val headers: Seq[(String, String)] = Seq.empty[(String, String)]) extends Exception(message) {
-
+  val headers: Seq[(String, String)] = Seq.empty[(String, String)]) extends Exception(reason) {
   /**
    * The error code to use. Subclasses may redefine this to return other exit
    * codes.

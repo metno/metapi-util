@@ -39,7 +39,7 @@ class DataSpec extends Specification {
   "A Bad Request Exception" should {
     
     "have error code 400" in {
-      val ex = new BadRequestException("Default", DateTime.now(DateTimeZone.UTC))
+      val ex = new BadRequestException(DateTime.now(DateTimeZone.UTC), "Default")
       ex.code must equalTo(400)
     }
     
