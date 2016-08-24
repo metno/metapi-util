@@ -23,27 +23,20 @@
     MA 02110-1301, USA
 */
 
-package no.met.data
+package test
 
+import org.junit.runner._
+import org.specs2.mutable._
+import org.specs2.runner._
+import models._
+import no.met.geometry.Point
 
-import com.github.nscala_time.time.Imports._
+@RunWith(classOf[JUnitRunner])
+class MetadataSpec extends Specification {
 
-/**
- * Throwing this exception is a signal to a controller that it should return
- * Bad Request. Any other exceptions should return Internal Server Error.
- *
- * @param message The error message to use
- * @param help Extra information regarding the error, that may be useful to a user
- * @param headers Extra headers that should be included in a response with this error
- */
-class BadRequestException(message: String,
-  start: DateTime,
-  val help: Option[String] = None,
-  val headers: Seq[(String, String)] = Seq.empty[(String, String)]) extends Exception(message) {
-
-  /**
-   * The error code to use. Subclasses may redefine this to return other exit
-   * codes.
-   */
-  val code: Int = 400 // scalastyle:ignore
+  "Point object" should {
+    "return valid WKT from toString" in {
+      new Point(coordinates=Seq(54.5,10.2)).toString mustEqual("POINT(54.5 10.2)")
+    }
+  }
 }

@@ -30,7 +30,7 @@ import scala.util._
 import scala.annotation.tailrec
 
 /**
- * Metno's Interval parsing mechanism, extending ISO8601 standard with repeating time periods
+ * Support for the Met API's time interval parsing mechanism, extending ISO8601 standard with repeating time periods
  */
 object TimeSpecification {
 

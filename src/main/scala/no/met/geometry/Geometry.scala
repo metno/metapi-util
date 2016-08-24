@@ -23,16 +23,27 @@
     MA 02110-1301, USA
 */
 
+package no.met.geometry
 
-package no.met.json
+import io.swagger.annotations._
+import scala.annotation.meta.field
+import java.net.URL
+import com.github.nscala_time.time.Imports._
+import no.met.data.{ApiConstants,BasicResponse}
 
+/**
+ * Support for Geometry objects in the data model.
+ */
 
-trait Stack[A] {
-   def push(element: A): Unit
-   def pop(): Option[A]
-   def peek(): Option[A]
-   def isEmpty: Boolean
-   def size: Int
-   def inc:Unit =()
-   def name( n: String):Unit =()
+sealed trait GeomType {
+  /** Return the geometry as a WKT string. ex POINT( 9 62 ) */
+  def asWkt:String
+}
+
+case class Point(
+  @(ApiModelProperty @field)(name="@type", value="The type of the geometry object", example="Point") geomType: String = "Point",
+  @(ApiModelProperty @field)(value="Coordinates of the geometry object", example="59.9423, 10.72") coordinates: Seq[Double]
+)  extends GeomType {
+  def asWkt:String = s"POINT(${coordinates(0)} ${coordinates(1)})"
+  override def toString():String = asWkt
 }

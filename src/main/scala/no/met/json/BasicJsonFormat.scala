@@ -23,28 +23,35 @@
     MA 02110-1301, USA
 */
 
-package no.met.data.format.json
+package no.met.json
 
-import scala.language.postfixOps
 import play.api.libs.json._
-import no.met.data._
+import play.api.libs.functional.syntax._
 import com.github.nscala_time.time.Imports._
-import org.joda.time.format.{ DateTimeFormatter, DateTimeFormatterBuilder }
 import java.net.URL
+import org.joda.time.format.{ DateTimeFormatter, DateTimeFormatterBuilder }
+import scala.language.postfixOps
+import no.met.data._
+import no.met.geometry._
 
 /**
  * Various json formatting methods that are useful for all data.met.no services.
  */
 class BasicJsonFormat {
 
+  implicit val pointWrites: Writes[Point] = (
+    (JsPath \ "@type").write[String] and 
+    (JsPath \ "coordinates").write[Seq[Double]]
+  )(unlift(Point.unapply))
+  
+  implicit val urlWrites: Writes[URL] = new Writes[URL] {
+    def writes(u: URL): JsValue = JsString(u.toString)
+  }
+
   private val dateTimeZFormatter = new DateTimeFormatterBuilder()
     .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
     .appendTimeZoneOffset("Z", false, 2, 2)
     .toFormatter()
-
-  implicit val urlWrites: Writes[URL] = new Writes[URL] {
-    def writes(u: URL): JsValue = JsString(u.toString)
-  }
 
   /**
    * Formatting datetime, optionally with a format string
@@ -66,6 +73,8 @@ class BasicJsonFormat {
     }
   }
 
+  implicit val dateWrite = dateTimeWrites(Some(dateTimeZFormatter))
+
   /**
    * Formatting durations
    */
@@ -73,49 +82,6 @@ class BasicJsonFormat {
     def writes(d: Duration): JsValue = JsNumber(d.getMillis.toDouble / 1000)
   }
 
-  implicit val dateWrite = dateTimeWrites(Some(dateTimeZFormatter))
   implicit val durationWrite = durationWrites
 
-  /**
-   * Get json formatted header elements
-   */
-  def header(responseData: BasicResponseData): JsObject = {
-    JsObject(headerElements(responseData))
-  }
-
-  private def headerElements(responseData: BasicResponseData): Seq[(String, JsValue)] = {
-    val data = scala.collection.mutable.MutableList[(String, JsValue)](
-      "@context" -> JsString(responseData.context.toString),
-      "@type" -> JsString(responseData.contextType),
-      "@id" -> JsString(responseData.id),
-      "apiVersion" -> JsString(responseData.apiVersion),
-      "license" -> JsString(responseData.license.toString),
-      "createdAt" -> dateTimeWrites().writes(responseData.createdAt),
-      "queryTime" -> durationWrites.writes(responseData.queryTime))
-
-    if (responseData.itemsPerPage < responseData.totalItemCount) {
-      data ++= Seq(
-        "currentItemCount" -> JsNumber(responseData.currentItemCount),
-        "itemsPerPage" -> JsNumber(responseData.itemsPerPage),
-        "startOffset" -> JsNumber(responseData.startOffset))
-    }
-
-    data += Tuple2("totalItemCount", JsNumber(responseData.totalItemCount))
-
-    if (responseData.itemsPerPage < responseData.totalItemCount) {
-      def unpack(value: Option[URL]): JsValue = {
-        value match {
-          case Some(s) => JsString(s.toString)
-          case None => JsNull
-        }
-      }
-      data ++= Seq(
-        "nextLink" -> unpack(responseData.nextLink),
-        "previousLink" -> unpack(responseData.previousLink))
-    }
-
-    data += Tuple2("currentLink", JsString(responseData.currentLink.toString))
-
-    data toList
-  }
 }
