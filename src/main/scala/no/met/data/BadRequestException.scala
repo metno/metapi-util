@@ -25,9 +25,6 @@
 
 package no.met.data
 
-
-import com.github.nscala_time.time.Imports._
-
 /**
  * Throwing this exception is a signal to a controller that it should return
  * Bad Request. Any other exceptions should return Internal Server Error.

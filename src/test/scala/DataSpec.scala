@@ -28,7 +28,6 @@ package test
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import com.github.nscala_time.time.Imports._
 import no.met.data._
 
 /* Tests for no.met.data utility classes */
