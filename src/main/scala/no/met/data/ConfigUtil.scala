@@ -27,6 +27,8 @@ package no.met.data
 
 import play.api.Play.current
 
+//$COVERAGE-OFF$ Requires active Play application
+
 /**
  * Various utilities for non-trivial reading of application configuration
  */
@@ -120,3 +122,5 @@ object ConfigUtil {
   }
 
 }
+
+//$COVERAGE-ON$

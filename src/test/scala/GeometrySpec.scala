@@ -28,11 +28,10 @@ package test
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import models._
 import no.met.geometry.Point
 
 @RunWith(classOf[JUnitRunner])
-class MetadataSpec extends Specification {
+class GeometrySpec extends Specification {
 
   "Point object" should {
     "return valid WKT from toString" in {

@@ -25,6 +25,8 @@
 
 package no.met.data
 
+//$COVERAGE-OFF$ No testing of constants
+
 object ApiConstants {
   final val METAPI_CONTEXT="https://data.met.no/schema/"
   final val METAPI_LICENSE="http://met.no/English/Data_Policy_and_Data_Services/"
@@ -67,3 +69,5 @@ object ApiConstants {
   final val DATA_NAME="data"
   final val DATA="Container for all the data from the response."
 }
+
+//$COVERAGE-ON$

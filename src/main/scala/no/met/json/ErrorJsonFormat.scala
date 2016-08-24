@@ -23,7 +23,7 @@
     MA 02110-1301, USA
 */
 
-package no.met.data.format.json
+package no.met.json
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -33,7 +33,6 @@ import io.swagger.annotations._
 import java.net.URL
 import scala.annotation.meta.field
 import no.met.data._
-import no.met.json.BasicJsonFormat
 
 /**
  * Functionality to provide error messages as json output
@@ -60,14 +59,9 @@ class ErrorJsonFormat extends BasicJsonFormat {
     @(ApiModelProperty @field)(value="Optional help text that may provide additional help.", example="Use /observations/timeSeries to determine which data sources exist with the given parameters.") help: Option[String]
   )
 
-  implicit val errorReportWrites: Writes[ErrorReport] = (
-    (JsPath \ "code").write[Int] and 
-    (JsPath \ "message").write[String] and
-    (JsPath \ "reason").writeNullable[String] and
-    (JsPath \ "help").writeNullable[String]
-  )(unlift(ErrorReport.unapply))
+  implicit val errorReportWrites = Json.writes[ErrorReport]
 
-  implicit val errorResponseWrites: Writes[ErrorResponse] = (
+  implicit val errorResponseWrites : Writes[ErrorResponse] = (
     (JsPath \ ApiConstants.CONTEXT_NAME).write[URL] and 
     (JsPath \ ApiConstants.OBJECT_TYPE_NAME).write[String] and
     (JsPath \ ApiConstants.API_VERSION_NAME).write[String] and

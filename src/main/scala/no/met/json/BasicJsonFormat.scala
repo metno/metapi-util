@@ -34,6 +34,8 @@ import scala.language.postfixOps
 import no.met.data._
 import no.met.geometry._
 
+//$COVERAGE-OFF$ Not sure how to test writers
+
 /**
  * Various json formatting methods that are useful for all data.met.no services.
  */
@@ -85,3 +87,5 @@ class BasicJsonFormat {
   implicit val durationWrite = durationWrites
 
 }
+
+//$COVERAGE-ON$
