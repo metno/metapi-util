@@ -37,7 +37,6 @@ import com.github.nscala_time.time.Imports._
  * @param headers Extra headers that should be included in a response with this error
  */
 class BadRequestException(
-  start: DateTime,
   reason: String,
   val help: Option[String] = None,
   val headers: Seq[(String, String)] = Seq.empty[(String, String)]) extends Exception(reason) {
