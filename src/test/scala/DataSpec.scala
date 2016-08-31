@@ -43,4 +43,42 @@ class DataSpec extends Specification {
     }
     
   }
+
+  "PostgresUtil should" should {
+    
+    "accept valid text strings when sanitizing" in {
+      PostgresUtil.sanitize(List("TA", "air_temp", "rr_24")) must not(throwA[Exception])
+    }
+    
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List("\"")) must throwA[Exception]
+    }
+    
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List("\'flf")) must throwA[Exception]
+    }
+    
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List("a-v")) must throwA[Exception]
+    }
+
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List("a ")) must throwA[Exception]
+    }
+
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List("-ad")) must throwA[Exception]
+    }
+
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List("RR 12")) must throwA[Exception]
+    }
+
+    "throw Exception on invalid strings when sanitizing" in {
+      PostgresUtil.sanitize(List(" TA")) must throwA[Exception]
+    }
+
+  }
+
+
 }
