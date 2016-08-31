@@ -41,6 +41,8 @@ import no.met.geometry._
  */
 class BasicJsonFormat {
 
+  implicit val levelWrites = Json.writes[Level]
+
   implicit val pointWrites: Writes[Point] = (
     (JsPath \ "@type").write[String] and 
     (JsPath \ "coordinates").write[Seq[Double]]
