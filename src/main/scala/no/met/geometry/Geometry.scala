@@ -40,6 +40,12 @@ case class GeometryProperty(
 
 sealed abstract class Geometry(properties: Option[GeometryProperty]) {
   /** Return the geometry as a WKT string. ex POINT (9 62) */
+  def isInterpolated:Boolean = {
+    if (properties.isEmpty)
+      false
+    else
+      !properties.get.interpolation.isEmpty
+  }
   def asWkt:String
   override def toString():String = asWkt
 }

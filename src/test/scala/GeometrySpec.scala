@@ -131,6 +131,20 @@ class GeometrySpec extends Specification {
       }
       
     }
+
+    "a nearest Geometry should return true in isInterpolated" in {
+      
+      val geom = Geometry.decode("nearest(POINT(30.1 10.2))")
+      geom.isInterpolated must beTrue
+      
+    }
+
+    "a plain Geometry should return false in isInterpolated" in {
+      
+      val geom = Geometry.decode("POINT(30.1 10.2)")
+      geom.isInterpolated must beFalse
+      
+    }
     
   }
   /*
