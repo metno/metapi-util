@@ -23,7 +23,7 @@
     MA 02110-1301, USA
 */
 
-package services.observations
+package no.met.data
 
 import scala.language.postfixOps
 import scala.util._
