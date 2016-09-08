@@ -43,9 +43,12 @@ class BasicJsonFormat {
 
   implicit val levelWrites = Json.writes[Level]
 
+  implicit val geometryPropertyWrites = Json.writes[GeometryProperty]
+  
   implicit val pointWrites: Writes[Point] = (
     (JsPath \ "@type").write[String] and 
-    (JsPath \ "coordinates").write[Seq[Double]]
+    (JsPath \ "coordinates").write[Seq[Double]] and
+    (JsPath \ "properties").writeNullable[GeometryProperty]
   )(unlift(Point.unapply))
   
   implicit val urlWrites: Writes[URL] = new Writes[URL] {
