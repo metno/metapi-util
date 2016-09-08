@@ -29,7 +29,7 @@ import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
 import scala.util._
-import services.observations._
+import no.met.data.SourceSpecification
 
 // scalastyle:off magic.number
 
