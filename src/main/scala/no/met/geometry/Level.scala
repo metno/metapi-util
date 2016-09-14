@@ -32,9 +32,13 @@ import scala.annotation.meta.field
  * Support for Level objects in the data model.
  */
 
+// scalastyle:off line.size.limit
+
 case class Level(
   @(ApiModelProperty @field)(value="The level type or parameter. This defines the reference for the level value.", example="height_above_ground") levelType: Option[String],
   @(ApiModelProperty @field)(value="The value of the level data.", example="42") value: Option[Double],
   @(ApiModelProperty @field)(value="The unit of measure of the level data. *code* if the unit is described using a code table.", example="m") unit: Option[String],
   @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String]
 )
+
+// scalastyle:on

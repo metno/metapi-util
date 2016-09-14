@@ -30,34 +30,36 @@ import org.specs2.mutable._
 import org.specs2.runner._
 import no.met.data._
 
+// scalastyle:off magic.number
+
 /* Tests for no.met.data utility classes */
 
 @RunWith(classOf[JUnitRunner])
 class DataSpec extends Specification {
 
   "A Bad Request Exception" should {
-    
+
     "have error code 400" in {
       val ex = new BadRequestException("Default")
       ex.code must equalTo(400)
     }
-    
+
   }
 
   "PostgresUtil should" should {
-    
+
     "accept valid text strings when sanitizing" in {
       PostgresUtil.sanitize(List("TA", "air_temp", "rr_24")) must not(throwA[Exception])
     }
-    
+
     "throw Exception on invalid strings when sanitizing" in {
       PostgresUtil.sanitize(List("\"")) must throwA[Exception]
     }
-    
+
     "throw Exception on invalid strings when sanitizing" in {
       PostgresUtil.sanitize(List("\'flf")) must throwA[Exception]
     }
-    
+
     "throw Exception on invalid strings when sanitizing" in {
       PostgresUtil.sanitize(List("a-v")) must throwA[Exception]
     }
@@ -80,5 +82,6 @@ class DataSpec extends Specification {
 
   }
 
-
 }
+
+// scalastyle:on

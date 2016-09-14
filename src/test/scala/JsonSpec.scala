@@ -34,23 +34,29 @@ import play.api.test._
 import play.api.test.Helpers._
 import no.met.json._
 
+// scalastyle:off magic.number
+
 @RunWith(classOf[JUnitRunner])
 class JsonSpec extends Specification {
 
   "Error json formatter" should {
-    
+
     "return valid Json from error call" in new WithApplication() {
-      val json = Json.parse(new ErrorJsonFormat().error(DateTime.now(DateTimeZone.UTC), 404, Some("This is a test."), Some("You do not need any help."))(FakeRequest(GET, "index.html")))
+      val json = Json.parse(new ErrorJsonFormat().error(
+          DateTime.now(DateTimeZone.UTC), 404, Some("This is a test."), Some("You do not need any help."))(FakeRequest(GET, "index.html")))
       (json \ "error" \ "code").as[Int] must equalTo(404)
       (json \ "error" \ "reason").as[String] must equalTo("This is a test.")
       (json \ "error" \ "help").as[String] must equalTo("You do not need any help.")
     }
 
     "return code as message for unknown error code" in new WithApplication() {
-      val json = Json.parse(new ErrorJsonFormat().error(DateTime.now(DateTimeZone.UTC), 420, Some("This is a test."), Some("You do not need any help."))(FakeRequest(GET, "index.html")))
+      val json = Json.parse(new ErrorJsonFormat().error(
+          DateTime.now(DateTimeZone.UTC), 420, Some("This is a test."), Some("You do not need any help."))(FakeRequest(GET, "index.html")))
       (json \ "error" \ "code").as[Int] must equalTo(420)
       (json \ "error" \ "message").as[String] must equalTo("420") // Enhance your Calm
     }
-    
+
   }
 }
+
+// scalastyle:on

@@ -32,8 +32,8 @@ import java.net.URL
  * We set the the individual case classes to inherit from BasicResponse in order
  * to enforce consistency (i.e., if the BasicResponse is modified, then the underlying
  * case classes will also require modification.
- * 
- * To drop the consistency requirement, simply ignore the base class. 
+ *
+ * To drop the consistency requirement, simply ignore the base class.
  */
 abstract class BasicResponse(
   context: URL,

@@ -54,6 +54,6 @@ object SourceSpecification {
     }
 
     sources split "," map (s => stripPrefixFromInt(s.trim().toString, "SN")) toSeq
-    
+
   }
 }

@@ -34,6 +34,8 @@ import java.net.URL
 import scala.annotation.meta.field
 import no.met.data._
 
+// scalastyle:off line.size.limit
+
 /**
  * Functionality to provide error messages as json output
  */
@@ -62,7 +64,7 @@ class ErrorJsonFormat extends BasicJsonFormat {
   implicit val errorReportWrites = Json.writes[ErrorReport]
 
   implicit val errorResponseWrites : Writes[ErrorResponse] = (
-    (JsPath \ ApiConstants.CONTEXT_NAME).write[URL] and 
+    (JsPath \ ApiConstants.CONTEXT_NAME).write[URL] and
     (JsPath \ ApiConstants.OBJECT_TYPE_NAME).write[String] and
     (JsPath \ ApiConstants.API_VERSION_NAME).write[String] and
     (JsPath \ ApiConstants.LICENSE_NAME).write[URL] and
@@ -71,7 +73,7 @@ class ErrorJsonFormat extends BasicJsonFormat {
     (JsPath \ ApiConstants.CURRENT_LINK_NAME).write[URL] and
     (JsPath \ "error").write[ErrorReport]
   )(unlift(ErrorResponse.unapply))
-  
+
   def message(code: Int): String = {
     val messages = Map[Int, String](
         400 -> "Bad Request",
@@ -80,7 +82,7 @@ class ErrorJsonFormat extends BasicJsonFormat {
         500 -> "Internal Server Error")
     messages.getOrElse(code, code.toString)
   }
-  
+
   /**
    * Write a json string, specifying the given error
    */
@@ -98,3 +100,5 @@ class ErrorJsonFormat extends BasicJsonFormat {
   }
 
 }
+
+// scalastyle:on
