@@ -1,14 +1,28 @@
-# metapi-util-scala
+# Utility classes and functions for the data.met.no MET API
 
-metapi-util-scala provides some basic functionality that is used across all
-modules in the API.
+metapi-util provides a number of basic utility classes and functionality that
+is common to most of the modules in the MET API.
 
-## BasicJsonFormat
+## Package no.met.data
 
-Provides header elements + some common readers and writers for the standard
-Json format.
+This package provides basic functionality specific to the API code. This 
+includes the BasicResponse class, and a number of constants used for 
+responses. It also contains the BadRequestException, as well as the 
+SourceSpecification and FieldSpecification objects which are used to parse
+sources and fields query parameters respectively.
 
-## Send mail (Deprecated)
+## Package no.met.geometry
+
+This defines geometry objects and level objects for the data.met.no MET API.
+
+## Package no.met.json
+
+Provides the basic JSON formatting code for the data.met.no MET API. The
+classes here contains some of the common readers and writers for the Json
+format.
+
+## Package no.met.mail (Deprecated)
+
 Provides a simple way to send emails.
 
 Ex.
@@ -31,3 +45,11 @@ object test {
   }
 }
 ```
+
+This package is deprecated.
+
+## Package no.met.time
+
+This contains classes and functions for the handling of the time specification
+in the data.met.no MET API.
+
