@@ -67,7 +67,7 @@ class FieldSpecificationSpec extends Specification {
       FieldSpecification.parse(Some(" description, name,description ")) must equalTo(s)
       FieldSpecification.parse(Some(" name , description , name")) must equalTo(s)
     }
-    
+
     "parse empty fields" in {
       FieldSpecification.parse(None) must equalTo(Set())
       FieldSpecification.parse(Some(",")) must equalTo(Set())
