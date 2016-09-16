@@ -40,41 +40,42 @@ class SourceSpecificationSpec extends Specification {
 
     "parse single source" in {
       val s = Seq("1234")
-      SourceSpecification.parse("SN1234") must equalTo(s)
-      SourceSpecification.parse("SN1234 ") must equalTo(s)
-      SourceSpecification.parse(" SN1234") must equalTo(s)
-      SourceSpecification.parse(" SN1234 ") must equalTo(s)
-      SourceSpecification.parse("SN1234,") must equalTo(s)
-      SourceSpecification.parse("SN1234,,") must equalTo(s)
+      SourceSpecification.parse(Some("SN1234")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234 ")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234 ")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234,")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234,,")) must equalTo(s)
     }
 
     "parse multiple sources" in {
       val s = Seq("1234", "5678")
-      SourceSpecification.parse("SN1234,SN5678") must equalTo(s)
-      SourceSpecification.parse("SN1234, SN5678") must equalTo(s)
-      SourceSpecification.parse("SN1234 ,SN5678") must equalTo(s)
-      SourceSpecification.parse("SN1234 , SN5678") must equalTo(s)
-      SourceSpecification.parse(" SN1234,SN5678 ") must equalTo(s)
-      SourceSpecification.parse(" SN1234 , SN5678 ") must equalTo(s)
+      SourceSpecification.parse(Some("SN1234,SN5678")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234, SN5678")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234 ,SN5678")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234 , SN5678")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234,SN5678 ")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234 , SN5678 ")) must equalTo(s)
     }
 
     "parse empty" in {
-      SourceSpecification.parse(",") must equalTo(Seq())
-      SourceSpecification.parse(",,") must equalTo(Seq())
+      SourceSpecification.parse(None) must equalTo(Seq())
+      SourceSpecification.parse(Some(",")) must equalTo(Seq())
+      SourceSpecification.parse(Some(",,")) must equalTo(Seq())
     }
 
     "throw exception" in {
-      SourceSpecification.parse(", ,") must throwA[Exception]
-      SourceSpecification.parse(",SN1234") must throwA[Exception]
-      SourceSpecification.parse(",SN1234 ,") must throwA[Exception]
-      SourceSpecification.parse(",,SN1234 ,") must throwA[Exception]
-      SourceSpecification.parse(",SN1234 ,  SN5678") must throwA[Exception]
-      SourceSpecification.parse(",SN1234 ,  SN5678,,") must throwA[Exception]
-      SourceSpecification.parse("XX1234") must throwA[Exception]
-      SourceSpecification.parse("SN 1234") must throwA[Exception]
-      SourceSpecification.parse("SN") must throwA[Exception]
-      SourceSpecification.parse(",SN1234") must throwA[Exception]
-      SourceSpecification.parse("") must throwA[Exception]
+      SourceSpecification.parse(Some(", ,")) must throwA[Exception]
+      SourceSpecification.parse(Some(",SN1234")) must throwA[Exception]
+      SourceSpecification.parse(Some(",SN1234 ,")) must throwA[Exception]
+      SourceSpecification.parse(Some(",,SN1234 ,")) must throwA[Exception]
+      SourceSpecification.parse(Some(",SN1234 ,  SN5678")) must throwA[Exception]
+      SourceSpecification.parse(Some(",SN1234 ,  SN5678,,")) must throwA[Exception]
+      SourceSpecification.parse(Some("XX1234")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN 1234")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN")) must throwA[Exception]
+      SourceSpecification.parse(Some(",SN1234")) must throwA[Exception]
+      SourceSpecification.parse(Some("")) must throwA[Exception]
     }
   }
 }

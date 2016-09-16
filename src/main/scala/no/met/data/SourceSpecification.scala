@@ -37,7 +37,7 @@ object SourceSpecification {
    * Attempts to extract a list of climate station numbers from a string.
    * @param sources A list of one or more climate station numbers prefixed with "SN", e.g. "SN1234, SN4567".
    */
-  def parse(sources: String): Seq[String] = {
+  def parse(sources: Option[String]): Seq[String] = {
 
     /** Returns the integer resulting from removing a prefix from a string.
      * @param s Input string, expected to include the prefix.
@@ -53,7 +53,12 @@ object SourceSpecification {
       }
     }
 
-    sources split "," map (s => stripPrefixFromInt(s.trim().toString, "SN")) toSeq
+    sources match {
+      case Some(x) => x split "," map (s => stripPrefixFromInt(s.trim().toString, "SN")) toSeq
+      case _ => Seq()
+    }
+    
+    
 
   }
 }

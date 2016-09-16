@@ -57,6 +57,9 @@ pomExtra := (
 bintrayReleaseOnPublish := false
 publishArtifact in Test := false
 
+// Linting
+// ----------------------------------------------------------------------
+(scalastyleConfigUrl in Compile) := Some(url("https://raw.githubusercontent.com/metno/scalastyle/master/etc/scalastyle-config.xml"))
 
 // Testing
 // ----------------------------------------------------------------------
