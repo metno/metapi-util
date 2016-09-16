@@ -25,12 +25,12 @@
 
 package test
 
-import no.met.time._
 import org.specs2.mutable._
 import org.specs2.runner._
-import org.junit.runner._
 import com.github.nscala_time.time.Imports._
+import org.junit.runner._
 import scala.util._
+import no.met.time._
 
 // scalastyle:off magic.number
 
