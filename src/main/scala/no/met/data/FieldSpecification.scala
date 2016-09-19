@@ -29,7 +29,7 @@ import scala.language.postfixOps
 import scala.util._
 
 /**
- * Parsing of sources.
+ * Parsing of fields.
  */
 object FieldSpecification {
 
