@@ -1,5 +1,5 @@
 /*
-    MET-API
+    MET-API.
 
     Copyright (C) 2014 met.no
     Contact information:
@@ -45,20 +45,41 @@ object SourceSpecification {
      *   Special characters are not guaranteed to work (in particular not '(' and ')').
      */
     def stripPrefixFromInt(s: String, prefix: String): String = {
-      val pattern = s"""$prefix(\\d+)""".r
+      val pattern = s"""$prefix(\\d+([:](([\\d+])|ALL))?)""".r
       s match {
-        case pattern(x) => x
-        case _ => throw new no.met.data.BadRequestException(s"Invalid source name: $s (expected $prefix<int>)",
-          Some(s"Currently, all sources must have the prefix $prefix, like this: ${prefix}18700"))
+        case pattern(x,_,_,_) => x
+        case _ => throw new BadRequestException(
+            s"Invalid source name: $s (expected $prefix<int>)",
+            Some(s"Currently, all sources must have the prefix $prefix, like this: ${prefix}18700, and may optionally contain a specification of the sensor channel; e.g., SN18700:0, SN18700:1 or SN18700:all.")
+          )
       }
     }
 
     sources match {
-      case Some(x) => x split "," map (s => stripPrefixFromInt(s.trim().toString, "SN")) toSeq
+      case Some(x) => x split "," map (s => stripPrefixFromInt(s.toUpperCase.trim().toString, "SN")) toSeq
       case _ => Seq()
     }
-    
-    
 
   }
+
+  def sql(sources: Seq[String], stNr: String, snNr: Option[String]):String = {
+
+    def querySourceAndSensor(source: String, stNr: String, snNr: Option[String]) : String = {
+      val s = source.split(":")
+      val sourceId = s(0)
+      val sensorId = if (s.length > 1) s(1) else "0"
+      if (snNr.isEmpty) {
+        s"""($stNr = $sourceId)"""
+      } else {
+        sensorId match {
+          case "ALL" => s"""($stNr = $sourceId)"""
+          case _ => s"""($stNr = $sourceId AND ${snNr.get} = $sensorId)"""
+        }
+      }
+    }
+    
+    sources.map(querySourceAndSensor(_, stNr, snNr)).mkString(" OR ")
+    
+  }
+
 }
