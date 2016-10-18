@@ -25,6 +25,7 @@
 
 package no.met.json
 
+import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.mvc._
@@ -76,17 +77,17 @@ class ErrorJsonFormat extends BasicJsonFormat {
 
   def message(code: Int): String = {
     val messages = Map[Int, String](
-        400 -> "Bad Request",
-        401 -> "Unauthorized",
-        404 -> "Not found",
-        500 -> "Internal Server Error")
+        BAD_REQUEST -> "Bad Request",
+        UNAUTHORIZED -> "Unauthorized",
+        NOT_FOUND -> "Not found",
+        INTERNAL_SERVER_ERROR -> "Internal Server Error")
     messages.getOrElse(code, code.toString)
   }
 
   /**
    * Write a json string, specifying the given error
    */
-  def error(start: DateTime, code: Int, reason: Option[String] = None, help: Option[String] = None)(implicit request: RequestHeader): String = {
+  def error(code: Int, reason: Option[String] = None, help: Option[String] = None, start: DateTime = DateTime.now(DateTimeZone.UTC))(implicit request: RequestHeader): String = {
     val duration = new Duration(DateTime.now.getMillis() - start.getMillis())
     val response = new ErrorResponse( new URL(ApiConstants.METAPI_CONTEXT),
                                       "ErrorResponse",
@@ -94,7 +95,7 @@ class ErrorJsonFormat extends BasicJsonFormat {
                                       new URL(ApiConstants.METAPI_LICENSE),
                                       start,
                                       duration,
-                                      new URL(ConfigUtil.urlStart + request.uri),
+                                      new URL(ConfigUtil.urlStart + request.uri), // ### should be sanitized to prevent XSS attacks!
                                       new ErrorReport(code, message(code), reason, help))
     Json.prettyPrint(Json.toJson(response))
   }
