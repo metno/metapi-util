@@ -43,7 +43,7 @@ class JsonSpec extends Specification {
 
     "return valid Json from error call" in new WithApplication() {
       val json = Json.parse(new ErrorJsonFormat().error(
-          DateTime.now(DateTimeZone.UTC), 404, Some("This is a test."), Some("You do not need any help."))(FakeRequest(GET, "index.html")))
+          404, Some("This is a test."), Some("You do not need any help."), DateTime.now(DateTimeZone.UTC))(FakeRequest(GET, "index.html")))
       (json \ "error" \ "code").as[Int] must equalTo(404)
       (json \ "error" \ "reason").as[String] must equalTo("This is a test.")
       (json \ "error" \ "help").as[String] must equalTo("You do not need any help.")
@@ -51,7 +51,7 @@ class JsonSpec extends Specification {
 
     "return code as message for unknown error code" in new WithApplication() {
       val json = Json.parse(new ErrorJsonFormat().error(
-          DateTime.now(DateTimeZone.UTC), 420, Some("This is a test."), Some("You do not need any help."))(FakeRequest(GET, "index.html")))
+          420, Some("This is a test."), Some("You do not need any help."), DateTime.now(DateTimeZone.UTC))(FakeRequest(GET, "index.html")))
       (json \ "error" \ "code").as[Int] must equalTo(420)
       (json \ "error" \ "message").as[String] must equalTo("420") // Enhance your Calm
     }

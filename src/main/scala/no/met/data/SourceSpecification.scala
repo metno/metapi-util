@@ -1,5 +1,5 @@
 /*
-    MET-API
+    MET-API.
 
     Copyright (C) 2014 met.no
     Contact information:
@@ -33,34 +33,53 @@ import scala.util._
  */
 object SourceSpecification {
 
-  /**
+  /*
    * Attempts to extract a list of climate station numbers from a string.
    * @param sources A list of one or more climate station numbers prefixed with "SN", e.g. "SN1234, SN4567".
    */
   def parse(sources: Option[String]): Seq[String] = {
 
-    /** Returns the integer resulting from removing a prefix from a string.
+    /* Returns the integer resulting from removing a prefix from a string.
      * @param s Input string, expected to include the prefix.
      * @param prefix Prefix, expected to be a combination of characters from [a-z] and [A-Z].
      *   Special characters are not guaranteed to work (in particular not '(' and ')').
      */
     def stripPrefixFromInt(s: String, prefix: String): String = {
-      val pattern = s"""$prefix(\\d+)""".r
+      val pattern = s"""$prefix(\\d+([:](([\\d+])|ALL))?)""".r
       s match {
-        case pattern(x) => x
+        case pattern(x,_,_,_) => x
         case _ => throw new BadRequestException(
             s"Invalid source name: $s (expected $prefix<int>)",
-            Some(s"Currently, all sources must have the prefix $prefix, like this: ${prefix}18700")
+            Some(s"Currently, all sources must have the prefix $prefix, like this: ${prefix}18700, and may optionally contain a specification of the sensor channel; e.g., SN18700:0, SN18700:1 or SN18700:all.")
           )
       }
     }
 
     sources match {
-      case Some(x) => x split "," map (s => stripPrefixFromInt(s.trim().toString, "SN")) toSeq
+      case Some(x) => x split "," map (s => stripPrefixFromInt(s.toUpperCase.trim().toString, "SN")) toSeq
       case _ => Seq()
     }
-    
-    
 
   }
+
+  def sql(sources: Seq[String], stNr: String, snNr: Option[String]):String = {
+
+    def querySourceAndSensor(source: String, stNr: String, snNr: Option[String]) : String = {
+      val s = source.split(":")
+      val sourceId = s(0)
+      val sensorId = if (s.length > 1) s(1) else "0"
+      if (snNr.isEmpty) {
+        s"""($stNr = $sourceId)"""
+      } else {
+        sensorId match {
+          case "ALL" => s"""($stNr = $sourceId)"""
+          case _ => s"""($stNr = $sourceId AND ${snNr.get} = $sensorId)"""
+        }
+      }
+    }
+    
+    sources.map(querySourceAndSensor(_, stNr, snNr)).mkString(" OR ")
+    
+  }
+
 }

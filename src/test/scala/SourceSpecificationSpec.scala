@@ -77,6 +77,71 @@ class SourceSpecificationSpec extends Specification {
       SourceSpecification.parse(Some(",SN1234")) must throwA[Exception]
       SourceSpecification.parse(Some("")) must throwA[Exception]
     }
+
+    "parse source with sensor 0" in {
+      val s = Seq("1234:0")
+      SourceSpecification.parse(Some("SN1234:0")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:0 ")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234:0")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234:0 ")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:0,")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:0,,")) must equalTo(s)
+    }
+
+    "parse source with sensor ALL" in {
+      val s = Seq("1234:ALL")
+      SourceSpecification.parse(Some("SN1234:ALL")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:ALL ")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234:ALL")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234:ALL ")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:ALL,")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:ALL,,")) must equalTo(s)
+    }
+
+    "parse source with sensor ALL in different cases" in {
+      val s = Seq("1234:ALL")
+      SourceSpecification.parse(Some("SN1234:aLL")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:AlL ")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234:All")) must equalTo(s)
+      SourceSpecification.parse(Some(" SN1234:ALl ")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:all,")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:all,,")) must equalTo(s)
+    }
+
+   "fail to parse source with sensor that is not ALL or digits" in {
+      SourceSpecification.parse(Some("SN1234:A")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN1234:AL")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN1234:xyz")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN1234:xal")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN1234:al1")) must throwA[Exception]
+      SourceSpecification.parse(Some("SN1234:al")) must throwA[Exception]
+    }
+
+    "convert list of source and sensor numbers to SQL" in {
+      val s = "(stationId = SN12 AND sensorNr = 0) OR (stationId = SN34 AND sensorNr = 1) OR (stationId = SN56 AND sensorNr = 2)"
+      SourceSpecification.sql(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", Some("sensorNr")) must equalTo(s)
+    }
+
+    "convert list of source with ALL to SQL" in {
+      val s = "(stationId = SN12) OR (stationId = SN34) OR (stationId = SN56)"
+      SourceSpecification.sql(Seq("SN12:ALL", "SN34:ALL", "SN56:ALL"), "stationId", Some("sensorNr")) must equalTo(s)
+    }
+
+    "convert list of source without sensor numbers to SQL" in {
+      val s = "(stationId = SN12 AND sensorNr = 0) OR (stationId = SN34 AND sensorNr = 0) OR (stationId = SN56 AND sensorNr = 0)"
+      SourceSpecification.sql(Seq("SN12", "SN34", "SN56"), "stationId", Some("sensorNr")) must equalTo(s)
+    }
+
+    "convert list of mixed source Ids with and without sensor numbers to SQL" in {
+      val s = "(stationId = SN12 AND sensorNr = 0) OR (stationId = SN34) OR (stationId = SN56 AND sensorNr = 0)"
+      SourceSpecification.sql(Seq("SN12:0", "SN34:ALL", "SN56"), "stationId", Some("sensorNr")) must equalTo(s)
+    }
+
+    "convert list of source and sensor numbers to SQL without a SensorNumber attribute" in {
+      val s = "(stationId = SN12) OR (stationId = SN34) OR (stationId = SN56)"
+      SourceSpecification.sql(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", None) must equalTo(s)
+    }
+
   }
 }
 

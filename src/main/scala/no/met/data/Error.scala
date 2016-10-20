@@ -25,22 +25,13 @@
 
 package no.met.data
 
-import scala.language.postfixOps
-import scala.util._
+import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.Results.Status
+import com.github.nscala_time.time.Imports._
+import no.met.json.ErrorJsonFormat
 
-/**
- * Parsing of fields.
- */
-object FieldSpecification {
-
-  /** Create a set of field entries from the string. Returns an empty set if None.
-   * @param fields A comma-delimited list of field strings.
-   */
-  def parse(fields: Option[String]): Set[String] = {
-    fields match {
-      case Some(x) => x.toLowerCase.split(",").map(_.trim).toSet
-      case _ => Set()
-    }
+object Error {
+  def error(code: Int, msg: Option[String], help: Option[String], start: DateTime = DateTime.now(DateTimeZone.UTC))(implicit request: RequestHeader): Result = {
+    Status(code)(new ErrorJsonFormat().error(code, msg, help, start)(request))
   }
-
 }
