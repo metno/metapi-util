@@ -25,6 +25,7 @@
 
 package no.met.json
 
+import play.api.Configuration
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -87,7 +88,7 @@ class ErrorJsonFormat extends BasicJsonFormat {
   /**
    * Write a json string, specifying the given error
    */
-  def error(code: Int, reason: Option[String] = None, help: Option[String] = None, start: DateTime = DateTime.now(DateTimeZone.UTC))(implicit request: RequestHeader): String = {
+  def error(code: Int, reason: Option[String] = None, help: Option[String] = None, start: DateTime = DateTime.now(DateTimeZone.UTC))(implicit configuration: Configuration, request: RequestHeader): String = {
     val duration = new Duration(DateTime.now.getMillis() - start.getMillis())
     val response = new ErrorResponse( new URL(ApiConstants.METAPI_CONTEXT),
                                       "ErrorResponse",
@@ -95,7 +96,7 @@ class ErrorJsonFormat extends BasicJsonFormat {
                                       new URL(ApiConstants.METAPI_LICENSE),
                                       start,
                                       duration,
-                                      new URL(ConfigUtil.urlStart + request.uri), // ### should be sanitized to prevent XSS attacks!
+                                      new URL(configuration.getString("application.baseUrl").getOrElse("http://localhost:9000/") + request.uri), // ### should be sanitized to prevent XSS attacks!
                                       new ErrorReport(code, message(code), reason, help))
     Json.prettyPrint(Json.toJson(response))
   }

@@ -25,13 +25,14 @@
 
 package no.met.data
 
+import play.api.Configuration
 import play.api.mvc.{RequestHeader, Result}
 import play.api.mvc.Results.Status
 import com.github.nscala_time.time.Imports._
 import no.met.json.ErrorJsonFormat
 
 object Error {
-  def error(code: Int, msg: Option[String], help: Option[String], start: DateTime = DateTime.now(DateTimeZone.UTC))(implicit request: RequestHeader): Result = {
-    Status(code)(new ErrorJsonFormat().error(code, msg, help, start)(request))
+  def error(code: Int, msg: Option[String], help: Option[String], start: DateTime = DateTime.now(DateTimeZone.UTC))(implicit configuration: Configuration, request: RequestHeader): Result = {
+    Status(code)(new ErrorJsonFormat().error(code, msg, help, start)(configuration, request))
   }
 }

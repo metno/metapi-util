@@ -29,6 +29,7 @@ import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
 import com.github.nscala_time.time.Imports._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.test._
 import play.api.test.Helpers._
@@ -39,11 +40,17 @@ import no.met.json._
 @RunWith(classOf[JUnitRunner])
 class JsonSpec extends Specification {
 
+  val app = new GuiceApplicationBuilder()
+    //.in(new File("path/to/app"))
+    //.in(Mode.Test)
+    //.in(classLoader)
+    .build
+  
   "Error json formatter" should {
 
     "return valid Json from error call" in new WithApplication() {
       val json = Json.parse(new ErrorJsonFormat().error(
-          404, Some("This is a test."), Some("You do not need any help."), DateTime.now(DateTimeZone.UTC))(FakeRequest(GET, "index.html")))
+          404, Some("This is a test."), Some("You do not need any help."), DateTime.now(DateTimeZone.UTC))(app.configuration, FakeRequest(GET, "index.html")))
       (json \ "error" \ "code").as[Int] must equalTo(404)
       (json \ "error" \ "reason").as[String] must equalTo("This is a test.")
       (json \ "error" \ "help").as[String] must equalTo("You do not need any help.")
@@ -51,7 +58,7 @@ class JsonSpec extends Specification {
 
     "return code as message for unknown error code" in new WithApplication() {
       val json = Json.parse(new ErrorJsonFormat().error(
-          420, Some("This is a test."), Some("You do not need any help."), DateTime.now(DateTimeZone.UTC))(FakeRequest(GET, "index.html")))
+          420, Some("This is a test."), Some("You do not need any help."), DateTime.now(DateTimeZone.UTC))(app.configuration, FakeRequest(GET, "index.html")))
       (json \ "error" \ "code").as[Int] must equalTo(420)
       (json \ "error" \ "message").as[String] must equalTo("420") // Enhance your Calm
     }

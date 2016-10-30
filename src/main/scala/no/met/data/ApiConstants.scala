@@ -28,8 +28,8 @@ package no.met.data
 //$COVERAGE-OFF$ No testing of constants
 
 object ApiConstants {
-  final val METAPI_CONTEXT="https://data.met.no/schema/"
-  final val METAPI_LICENSE="http://met.no/English/Data_Policy_and_Data_Services/"
+  final val METAPI_CONTEXT="https://data.met.no/schema"
+  final val METAPI_LICENSE="https://creativecommons.org/licenses/by/3.0/no/"
   final val CONTEXT_NAME="@context"
   final val CONTEXT="The Json-LD context."
   final val OBJECT_TYPE_NAME="@type"

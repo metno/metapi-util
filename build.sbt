@@ -1,6 +1,6 @@
 organization := "no.met.data"
 name := """util"""
-version := "0.3-SNAPSHOT"
+version := "0.4-SNAPSHOT"
 description := "Utility code used by the metapi."
 homepage :=  Some(url(s"https://github.com/metno"))
 licenses += "GPL-2.0" -> url("https://www.gnu.org/licenses/gpl-2.0.html")
@@ -14,15 +14,15 @@ lazy val root = (project in file("."))
 // Dependencies
 // ----------------------------------------------------------------------
 libraryDependencies ++= Seq(
- "com.typesafe.play" %% "play" % "2.4.8",
- "com.typesafe.play" %% "play-test" % "2.4.8",
- "com.typesafe.play" %% "play-json" % "2.4.8",
+ "com.typesafe.play" %% "play" % "2.5.9",
+ "com.typesafe.play" %% "play-test" % "2.5.9",
+ "com.typesafe.play" %% "play-json" % "2.5.9",
  "com.github.nscala-time" %% "nscala-time" % "2.14.0",
  "com.github.scopt" %% "scopt" % "3.5.0",
  "commons-logging" % "commons-logging" % "1.2",
  "io.swagger" %% "swagger-play2" % "1.5.2",
  "org.apache.commons" % "commons-email" % "1.4",
- "org.json4s" %% "json4s-native" % "3.4.0",
+ "org.json4s" %% "json4s-native" % "3.4.2",
  "org.slf4j" % "slf4j-log4j12" % "1.7.21",
  "org.subethamail" % "subethasmtp" % "3.1.7" % "test",
  "junit" % "junit" % "4.12" % "test",

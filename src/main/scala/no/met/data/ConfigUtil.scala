@@ -25,33 +25,35 @@
 
 package no.met.data
 
-import play.api.Play.current
+import javax.inject.Singleton
+import play.api.{ Configuration, Environment, Mode }
 
 //$COVERAGE-OFF$ Requires active Play application
 
 /**
  * Various utilities for non-trivial reading of application configuration
  */
-object ConfigUtil {
-
+@Singleton
+class ConfigUtil(val configuration: Configuration, environment: Environment) {
+  
   private trait ServiceSpec {
     def scheme: String
     def host: String
     def port: String
   }
   private class ProductionServiceSpec extends ServiceSpec {
-    override def scheme: String = current.configuration.getString("service.scheme") getOrElse "https"
-    override def host: String = current.configuration.getString("service.host").get // fail and propagate internal server error (500) if absent
-    override def port: String = current.configuration.getString("service.port").getOrElse("")
+    override def scheme: String = configuration.getString("service.scheme") getOrElse "https"
+    override def host: String = configuration.getString("service.host").get // fail and propagate internal server error (500) if absent
+    override def port: String = configuration.getString("service.port").getOrElse("")
   }
   private class DevServiceSpec extends ServiceSpec {
-    override def scheme: String = current.configuration.getString("service.scheme") getOrElse "http"
-    override def host: String = current.configuration.getString("service.host") getOrElse "localhost"
-    override def port: String = current.configuration.getString("service.port").getOrElse("9000")
+    override def scheme: String = configuration.getString("service.scheme") getOrElse "http"
+    override def host: String = configuration.getString("service.host") getOrElse "localhost"
+    override def port: String = configuration.getString("service.port").getOrElse("9000")
   }
 
   private lazy val serviceSpec: ServiceSpec = {
-    if (play.api.Play.isProd(play.api.Play.current)) {
+    if (environment.mode == Mode.Prod) {
       new ProductionServiceSpec()
     } else {
       new DevServiceSpec()
@@ -76,7 +78,7 @@ object ConfigUtil {
   /**
    * Prefix to path
    */
-  def pathPrefix: String = current.configuration.getString("service.pathPrefix") getOrElse ""
+  def pathPrefix: String = configuration.getString("service.pathPrefix") getOrElse ""
 
   /**
    * Returns a map that contains scheme, server, and pathPrefix derived from the service.* values in the configuration as follows:
