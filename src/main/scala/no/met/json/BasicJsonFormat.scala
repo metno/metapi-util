@@ -31,7 +31,7 @@ import com.github.nscala_time.time.Imports._
 import java.net.URL
 import org.joda.time.format.{ DateTimeFormatter, DateTimeFormatterBuilder }
 import scala.language.postfixOps
-import no.met.data._
+import no.met.data.ObsValue
 import no.met.geometry._
 
 //$COVERAGE-OFF$ Not sure how to test writers
@@ -90,6 +90,15 @@ class BasicJsonFormat {
   }
 
   implicit val durationWrite = durationWrites
+
+  /**
+    * Formatting ObsValue
+    */
+  def obsValueWrites: Writes[ObsValue] = new Writes[ObsValue] {
+    def writes(oval: ObsValue): JsValue = ObsValue.toJsValue(oval.value)
+  }
+
+  implicit val obsValueWrite = obsValueWrites
 
 }
 

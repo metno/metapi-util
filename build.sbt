@@ -19,6 +19,7 @@ libraryDependencies ++= Seq(
  "com.typesafe.play" %% "play-json" % "2.4.8",
  "com.github.nscala-time" %% "nscala-time" % "2.14.0",
  "com.github.scopt" %% "scopt" % "3.5.0",
+ "com.typesafe.play" %% "anorm" % "2.4.0",
  "commons-logging" % "commons-logging" % "1.2",
  "io.swagger" %% "swagger-play2" % "1.5.2",
  "org.apache.commons" % "commons-email" % "1.4",
