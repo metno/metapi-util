@@ -49,8 +49,8 @@ object SourceSpecification {
       s match {
         case pattern(x,_,_,_) => x
         case _ => throw new BadRequestException(
-            s"Invalid source name: $s (expected $prefix<int>)",
-            Some(s"Currently, all sources must have the prefix $prefix, like this: ${prefix}18700, and may optionally contain a specification of the sensor channel; e.g., SN18700:0, SN18700:1 or SN18700:all.")
+            s"Invalid station source name: $s (expected $prefix<int>)",
+            Some(s"Currently, all station sources must have the prefix $prefix, like this: ${prefix}18700, and may optionally contain a specification of the sensor channel; e.g., SN18700:0, SN18700:1 or SN18700:all.")
           )
       }
     }
@@ -77,9 +77,9 @@ object SourceSpecification {
         }
       }
     }
-    
+
     sources.map(querySourceAndSensor(_, stNr, snNr)).mkString(" OR ")
-    
+
   }
 
 }
