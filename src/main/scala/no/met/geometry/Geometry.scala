@@ -80,7 +80,9 @@ object Geometry {
       Polygon(coordinates=getPolygonCoordinates(geom))
     }
     else {
-      throw new BadRequestException(geometry + " is not a valid data.met.no MET API geometry specification")
+      throw new BadRequestException(
+        geometry + " is not a valid data.met.no MET API geometry specification",
+        Some("supported WKT syntax: POINT(lon lat), nearest(POINT(lon lat)), or POLYGON((30 10, 40 40, 20 40, 10 20, 30 10))"))
     }
   }
 

@@ -99,13 +99,9 @@ class SourceSpecificationSpec extends Specification {
     }
 
     "parse source with sensor ALL in different cases" in {
-      val s = Seq("1234:ALL")
-      SourceSpecification.parse(Some("SN1234:aLL")) must equalTo(s)
-      SourceSpecification.parse(Some("SN1234:AlL ")) must equalTo(s)
-      SourceSpecification.parse(Some(" SN1234:All")) must equalTo(s)
-      SourceSpecification.parse(Some(" SN1234:ALl ")) must equalTo(s)
-      SourceSpecification.parse(Some("SN1234:all,")) must equalTo(s)
-      SourceSpecification.parse(Some("SN1234:all,,")) must equalTo(s)
+      SourceSpecification.parse(Some("SN1234:all")) must equalTo(Seq("1234:all"))
+      SourceSpecification.parse(Some("SN1234:aLL")) must equalTo(Seq("1234:aLL"))
+      SourceSpecification.parse(Some("SN1234:All")) must equalTo(Seq("1234:All"))
     }
 
    "fail to parse source with sensor that is not ALL or digits" in {

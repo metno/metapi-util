@@ -45,18 +45,18 @@ object SourceSpecification {
      *   Special characters are not guaranteed to work (in particular not '(' and ')').
      */
     def stripPrefixFromInt(s: String, prefix: String): String = {
-      val pattern = s"""$prefix(\\d+([:](([\\d+])|ALL))?)""".r
+      val pattern = s"""(?i)$prefix(\\d+([:](([\\d+])|(?i)all))?)""".r
       s match {
         case pattern(x,_,_,_) => x
         case _ => throw new BadRequestException(
-            s"Invalid station source name: $s (expected $prefix<int>)",
+            s"Invalid station source name: $s (expected $prefix<int>[:<int>|all])",
             Some(s"Currently, all station sources must have the prefix $prefix, like this: ${prefix}18700, and may optionally contain a specification of the sensor channel; e.g., SN18700:0, SN18700:1 or SN18700:all.")
           )
       }
     }
 
     sources match {
-      case Some(x) => x split "," map (s => stripPrefixFromInt(s.toUpperCase.trim().toString, "SN")) toSeq
+      case Some(x) => x split "," map (s => stripPrefixFromInt(s.trim(), "SN")) toSeq
       case _ => Seq()
     }
 
