@@ -71,7 +71,7 @@ object SourceSpecification {
       if (snNr.isEmpty) {
         s"""($stNr = $sourceId)"""
       } else {
-        sensorId match {
+        sensorId.toUpperCase match {
           case "ALL" => s"""($stNr = $sourceId)"""
           case _ => s"""($stNr = $sourceId AND ${snNr.get} = $sensorId)"""
         }
