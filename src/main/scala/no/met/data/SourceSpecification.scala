@@ -51,7 +51,7 @@ object SourceSpecification {
         case _ => throw new BadRequestException(
             s"Invalid station source name: $s",
             Some(s"Station source names must have the form $prefix<int>[:<int>|all], e.g. ${prefix}18700, ${prefix}18700:0, or ${prefix}18700:all, " +
-            "where the content behind a colon specifies the sensor channel")
+            "where the content behind a colon specifies the sensor channel(s)")
           )
       }
     }
