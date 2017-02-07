@@ -35,7 +35,7 @@ object SourceSpecification {
 
   /*
    * Attempts to extract a list of climate station numbers from a string.
-   * @param sources A list of one or more climate station numbers prefixed with "SN", e.g. "SN1234, SN4567".
+   * @param sources A list of one or more climate station numbers prefixed with "SN" and optionally suffixed with a sensor channele.g. "SN1234, SN4567".
    */
   def parse(sources: Option[String]): Seq[String] = {
 
@@ -49,8 +49,9 @@ object SourceSpecification {
       s match {
         case pattern(x,_,_,_) => x
         case _ => throw new BadRequestException(
-            s"Invalid station source name: $s (expected $prefix<int>[:<int>|all])",
-            Some(s"Currently, all station sources must have the prefix $prefix, like this: ${prefix}18700, and may optionally contain a specification of the sensor channel; e.g., SN18700:0, SN18700:1 or SN18700:all.")
+            s"Invalid station source name: $s",
+            Some(s"Station source names must have the form $prefix<int>[:<int>|all], e.g. ${prefix}18700, ${prefix}18700:0, or ${prefix}18700:all, " +
+            "where the content behind a colon specifies the sensor channel")
           )
       }
     }
