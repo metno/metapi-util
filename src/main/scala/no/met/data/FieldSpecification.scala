@@ -28,10 +28,38 @@ package no.met.data
 import scala.language.postfixOps
 import scala.util._
 
+class FieldSpecification(fields: Option[Set[String]]) {
+
+  /**
+   * If the wanted keyword exists in contructor's fields, or fields is None,
+   * execute function and return result. Else return None.
+   */
+  def apply[T](wanted: String)(t: () => T): Option[T] = {
+    fields match {
+      case Some(spec) if (!spec.contains(wanted)) => None
+      case _ => Some(t())
+    }
+  }
+}
+
+
 /**
  * Parsing of fields.
  */
 object FieldSpecification {
+
+  /**
+   * Create a FieldSpecification object, using the parse function.
+   */
+  def apply(fields: Option[String]): FieldSpecification = {
+    val fieldSet = parse(fields)
+    if (fieldSet isEmpty) {
+      new FieldSpecification(None)
+    } else {
+      new FieldSpecification(Some(fieldSet))
+    }
+  }
+
 
   /** Create a set of field entries from the string. Returns an empty set if None.
    * @param fields A comma-delimited list of field strings.

@@ -36,7 +36,7 @@ import no.met.data.FieldSpecification
 @RunWith(classOf[JUnitRunner])
 class FieldSpecificationSpec extends Specification {
 
-  "FieldSpecification" should {
+  "FieldSpecification's parse function" should {
 
     "parse single field" in {
       val s = Set("description")
@@ -89,6 +89,29 @@ class FieldSpecificationSpec extends Specification {
       FieldSpecification.parse("") must throwA[Exception]
     }
     */
+  }
+
+  "FieldSpecification objects" should {
+    "handle None construction" in {
+      FieldSpecification(None)("a"){()=>3} must_== Some(3)
+    }
+
+    "handle simple spec - give data" in {
+      FieldSpecification(Some("a"))("a"){()=>3} must_== Some(3)
+    }
+
+    "handle simple spec - hide data" in {
+      FieldSpecification(Some("a"))("b"){()=>3} must_== None
+    }
+
+    "handle complex spec - give data" in {
+      FieldSpecification(Some("aba,gigi"))("gigi"){()=>2} must_== Some(2)
+    }
+
+    "handle complex spec - hide data" in {
+      FieldSpecification(Some("aba,gigi"))("flopp"){()=>67} must_== None
+    }
+
   }
 }
 
