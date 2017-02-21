@@ -14,19 +14,19 @@ lazy val root = (project in file("."))
 // Dependencies
 // ----------------------------------------------------------------------
 libraryDependencies ++= Seq(
- "com.typesafe.play" %% "play" % "2.4.8",
- "com.typesafe.play" %% "play-test" % "2.4.8",
- "com.typesafe.play" %% "play-json" % "2.4.8",
- "com.github.nscala-time" %% "nscala-time" % "2.14.0",
- "com.github.scopt" %% "scopt" % "3.5.0",
- "com.typesafe.play" %% "anorm" % "2.4.0",
- "commons-logging" % "commons-logging" % "1.2",
- "io.swagger" %% "swagger-play2" % "1.5.2",
- "org.apache.commons" % "commons-email" % "1.4",
- "org.json4s" %% "json4s-native" % "3.4.0",
- "org.slf4j" % "slf4j-log4j12" % "1.7.21",
- "org.subethamail" % "subethasmtp" % "3.1.7" % "test",
- "junit" % "junit" % "4.12" % "test",
+  "com.typesafe.play" %% "play" % "2.4.8",
+  "com.typesafe.play" %% "play-test" % "2.4.8",
+  "com.typesafe.play" %% "play-json" % "2.4.8",
+  "com.github.nscala-time" %% "nscala-time" % "2.14.0",
+  "com.github.scopt" %% "scopt" % "3.5.0",
+  "com.typesafe.play" %% "anorm" % "2.4.0",
+  "commons-logging" % "commons-logging" % "1.2",
+  "io.swagger" %% "swagger-play2" % "1.5.2",
+  "org.apache.commons" % "commons-email" % "1.4",
+  "org.json4s" %% "json4s-native" % "3.4.0",
+  "org.slf4j" % "slf4j-log4j12" % "1.7.21",
+  "org.subethamail" % "subethasmtp" % "3.1.7" % "test",
+  "junit" % "junit" % "4.12" % "test",
   specs2 % Test
 )
 
