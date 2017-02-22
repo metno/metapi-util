@@ -32,7 +32,7 @@ import IDFGridConfig._
 import play.api.Logger
 
 
-protected class SourceSpecification(srcstr: Option[String], typestr: Option[String]) {
+class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None) {
 
   private var stNames: Seq[String] = Seq[String]() // complete station names, including "SN" prefix
   private var stNumbers: Seq[String] = Seq[String]() // station numbers, i.e. station names without "SN" prefix
