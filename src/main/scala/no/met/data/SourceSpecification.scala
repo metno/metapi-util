@@ -85,20 +85,22 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
     }
 
     // at this point, any remaining sources are either station sources or misspelled IDF gridded dataset names
-    stNumbers = sources map(s => SourceSpecification.extractStationNumber(s) match {
-      case Some(x) => x
-      case None => throw new BadRequestException(
-        s"Source misspelled or not found: $s",
-        Some({
-          val prefix = SourceSpecification.stationPrefix
-          s"A station name must have the form $prefix<int>[:<int>|all] (e.g. ${prefix}18700, ${prefix}18700:0, " +
-            s"or ${prefix}18700:all, where the content behind a colon specifies the sensor channel(s)). " +
-            s"An IDF gridded dataset name must be one of: ${supIdfGridNames.mkString(", ")}."
-        })
-      )
-    })
+    if (typeAllowed(StationConfig.typeName)) {
+      stNumbers = sources map (s => SourceSpecification.extractStationNumber(s) match {
+        case Some(x) => x
+        case None => throw new BadRequestException(
+          s"Source misspelled or not found: $s",
+          Some({
+            val prefix = SourceSpecification.stationPrefix
+            s"A station name must have the form $prefix<int>[:<int>|all] (e.g. ${prefix}18700, ${prefix}18700:0, " +
+              s"or ${prefix}18700:all, where the content behind a colon specifies the sensor channel(s)). " +
+              s"An IDF gridded dataset name must be one of: ${supIdfGridNames.mkString(", ")}."
+          })
+        )
+      })
 
-    stNames = sources
+      stNames = sources
+    }
   }
 
 
