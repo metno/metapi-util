@@ -218,19 +218,19 @@ class SourceSpecificationSpec extends Specification {
       val siTag = s"$sTag,$iTag"
       val isTag = s"$iTag,$sTag"
 
-      SourceSpecification(Some(sInput), Some(sTag)).typeIncluded(sTag) must equalTo(true)
-      SourceSpecification(Some(siInput), Some(siTag)).typeIncluded(sTag) must equalTo(true)
-      SourceSpecification(Some(siInput), Some(isTag)).typeIncluded(sTag) must equalTo(true)
-      SourceSpecification(Some(siInput), Some("")).typeIncluded(sTag) must equalTo(true)
-      SourceSpecification(Some(siInput), None).typeIncluded(sTag) must equalTo(true)
-      SourceSpecification(Some(iInput), Some(iTag)).typeIncluded(sTag) must equalTo(false)
+      SourceSpecification(Some(sInput), Some(sTag)).typeAllowed(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(siTag)).typeAllowed(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(isTag)).typeAllowed(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some("")).typeAllowed(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), None).typeAllowed(sTag) must equalTo(true)
+      SourceSpecification(Some(iInput), Some(iTag)).typeAllowed(sTag) must equalTo(false)
 
-      SourceSpecification(Some(iInput), Some(iTag)).typeIncluded(iTag) must equalTo(true)
-      SourceSpecification(Some(siInput), Some(siTag)).typeIncluded(iTag) must equalTo(true)
-      SourceSpecification(Some(siInput), Some(isTag)).typeIncluded(iTag) must equalTo(true)
-      SourceSpecification(Some(siInput), Some("")).typeIncluded(iTag) must equalTo(true)
-      SourceSpecification(Some(siInput), None).typeIncluded(iTag) must equalTo(true)
-      SourceSpecification(Some(sInput), Some(sTag)).typeIncluded(iTag) must equalTo(false)
+      SourceSpecification(Some(iInput), Some(iTag)).typeAllowed(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(siTag)).typeAllowed(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(isTag)).typeAllowed(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some("")).typeAllowed(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), None).typeAllowed(iTag) must equalTo(true)
+      SourceSpecification(Some(sInput), Some(sTag)).typeAllowed(iTag) must equalTo(false)
     }
 
   }

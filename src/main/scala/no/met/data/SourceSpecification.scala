@@ -45,7 +45,8 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
   // ...
 
 
-  private var reqTypes: Set[String] = Set[String]()
+  private var reqTypes: Set[String] = Set[String]() // requested types
+  private var supTypes = Set[String]() // supported types
 
 
   // Initializes object by extracting sources from srcstr into sequences for their respective types. Considers typestr as an extra restriction.
@@ -54,12 +55,12 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
     // extract sources
     var sources: Seq[String] = srcstr.getOrElse("") split "," map(_.trim) filter(_.nonEmpty)
 
+    // define supported types
+    supTypes = supTypes ++ Set(StationConfig.typeName) // type 1
+    supTypes = supTypes ++ Set(IDFGridConfig.typeName) // type 2
+    // ... // type 3
+
     // extract and validate types
-    val stag = StationConfig.typeName
-    val stagLC = stag.toLowerCase
-    val itag = IDFGridConfig.typeName // a.k.a. IDF gridded dataset
-    val itagLC = itag.toLowerCase
-    val supTypes = Set(stag, itag)
     reqTypes = typestr.getOrElse("").toLowerCase split "," map(_.trim) filter(_.nonEmpty) toSet
     val unsupTypes = reqTypes -- supTypes.map(_.toLowerCase)
     if (unsupTypes.nonEmpty) {
@@ -68,22 +69,19 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
         Some(s"Supported types: ${supTypes.mkString(", ")}"))
     }
 
-    val sTypeOnly = !reqTypes.contains(itagLC) && reqTypes.contains(stagLC)
-    val iTypeOnly = !reqTypes.contains(stagLC) && reqTypes.contains(itagLC)
+    val supIdfGridNames = Set(IDFGridConfig.name) // supported IDF grid names (only one name for now!)
 
-    val supIdfGridNames = Set(IDFGridConfig.name) // only one name for now
-
-    if (!sTypeOnly) {
-      // IDF gridded dataset sources may be specified, so move any of those into igNames
+    // move IDF gridded dataset sources into igNames if possible
+    if (typeAllowed(IDFGridConfig.typeName)) {
       igNames = sources.filter(s => supIdfGridNames.contains(s))
       sources = sources.filter(s => !igNames.contains(s))
-    }
 
-    if (iTypeOnly && sources.nonEmpty) {
-      // only IDF gridded dataset sources were allowed, but other types were found
-      throw new BadRequestException(
-        s"Unsupported IDF gridded dataset source${if (sources.size == 1) "" else "s"}: ${sources.mkString(",")}",
-        Some(s"Supported sources: ${supIdfGridNames.mkString(", ")}"))
+      // flag an error if other types were found when only IDF gridded dataset sources were allowed
+      if (!typeAllowed(StationConfig.typeName) && sources.nonEmpty) {
+        throw new BadRequestException(
+          s"Unsupported IDF gridded dataset source${if (sources.size == 1) "" else "s"}: ${sources.mkString(",")}",
+          Some(s"Supported sources: ${supIdfGridNames.mkString(", ")}"))
+      }
     }
 
     // at this point, any remaining sources are either station sources or misspelled IDF gridded dataset names
@@ -104,7 +102,7 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
   }
 
 
-  // Type 1: Stations
+  // Type 1
 
   // Returns any station names found.
   def stationNames: Seq[String] = stNames
@@ -113,19 +111,22 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
   def stationNumbers: Seq[String] = stNumbers
 
 
-  // Type 2: IDF gridded datasets
+  // Type 2
 
   // Returns any IDF gridded dataset names found.
   def idfGridNames: Seq[String] = igNames
 
 
-  // Type 3: ...
+  // Type 3
 
   // ...
 
 
   // Returns true iff the given type is included (implicitly or explicitly) in the typestr passed when instantiating the object.
-  def typeIncluded(typeName: String): Boolean = reqTypes.isEmpty || reqTypes.contains(typeName.toLowerCase)
+  def typeAllowed(typeName: String): Boolean = {
+    val typeNameLC = typeName.toLowerCase
+    supTypes.map(_.toLowerCase).contains(typeNameLC) && (reqTypes.isEmpty || reqTypes.contains(typeNameLC))
+  }
 
 
   init() // initialize
