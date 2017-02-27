@@ -34,11 +34,21 @@ import play.api.Logger
 
 class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None) {
 
+  // Type 1: Stations
   private var stNames: Seq[String] = Seq[String]() // complete station names, including "SN" prefix
   private var stNumbers: Seq[String] = Seq[String]() // station numbers, i.e. station names without "SN" prefix
+
+  // Type 2: IDF gridded datasets
   private var igNames: Seq[String] = Seq[String]() // IDF gridded dataset names
 
-  // Extracts sources from srcstr into sequences for their respective types. Considers typestr as an extra restriction.
+  // Type 3: ...
+  // ...
+
+
+  private var reqTypes: Set[String] = Set[String]()
+
+
+  // Initializes object by extracting sources from srcstr into sequences for their respective types. Considers typestr as an extra restriction.
   // Throws BadRequestException upon error.
   private def init() = {
     // extract sources
@@ -50,7 +60,7 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
     val itag = IDFGridConfig.typeName // a.k.a. IDF gridded dataset
     val itagLC = itag.toLowerCase
     val supTypes = Set(stag, itag)
-    var reqTypes: Set[String] = typestr.getOrElse("").toLowerCase split "," map(_.trim) filter(_.nonEmpty) toSet
+    reqTypes = typestr.getOrElse("").toLowerCase split "," map(_.trim) filter(_.nonEmpty) toSet
     val unsupTypes = reqTypes -- supTypes.map(_.toLowerCase)
     if (unsupTypes.nonEmpty) {
       throw new BadRequestException(
@@ -93,16 +103,32 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
     stNames = sources
   }
 
+
+  // Type 1: Stations
+
   // Returns any station names found.
   def stationNames: Seq[String] = stNames
 
   // Returns any station numbers found.
   def stationNumbers: Seq[String] = stNumbers
 
+
+  // Type 2: IDF gridded datasets
+
   // Returns any IDF gridded dataset names found.
   def idfGridNames: Seq[String] = igNames
 
-  init()
+
+  // Type 3: ...
+
+  // ...
+
+
+  // Returns true iff the given type is included (implicitly or explicitly) in the typestr passed when instantiating the object.
+  def typeIncluded(typeName: String): Boolean = reqTypes.isEmpty || reqTypes.contains(typeName.toLowerCase)
+
+
+  init() // initialize
 }
 
 

@@ -209,6 +209,30 @@ class SourceSpecificationSpec extends Specification {
       SourceSpecification(Some("SN1234"), Some("foobar")) must throwA[Exception]
     }
 
+    "check type inclusion" in {
+      val sInput = "SN1234"
+      val iInput = IDFGridConfig.name
+      val siInput = s"$sInput,$iInput"
+      val sTag = StationConfig.typeName
+      val iTag = IDFGridConfig.typeName
+      val siTag = s"$sTag,$iTag"
+      val isTag = s"$iTag,$sTag"
+
+      SourceSpecification(Some(sInput), Some(sTag)).typeIncluded(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(siTag)).typeIncluded(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(isTag)).typeIncluded(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some("")).typeIncluded(sTag) must equalTo(true)
+      SourceSpecification(Some(siInput), None).typeIncluded(sTag) must equalTo(true)
+      SourceSpecification(Some(iInput), Some(iTag)).typeIncluded(sTag) must equalTo(false)
+
+      SourceSpecification(Some(iInput), Some(iTag)).typeIncluded(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(siTag)).typeIncluded(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some(isTag)).typeIncluded(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), Some("")).typeIncluded(iTag) must equalTo(true)
+      SourceSpecification(Some(siInput), None).typeIncluded(iTag) must equalTo(true)
+      SourceSpecification(Some(sInput), Some(sTag)).typeIncluded(iTag) must equalTo(false)
+    }
+
   }
 }
 
