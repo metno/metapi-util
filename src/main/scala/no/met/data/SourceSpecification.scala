@@ -130,6 +130,9 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
     supTypes.map(_.toLowerCase).contains(typeNameLC) && (reqTypes.isEmpty || reqTypes.contains(typeNameLC))
   }
 
+  // Returns true iff no supported and allowed sources were found.
+  def isEmpty: Boolean = stNames.isEmpty && igNames.isEmpty
+
 
   init() // initialize
 }

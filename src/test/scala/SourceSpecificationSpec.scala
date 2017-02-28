@@ -233,6 +233,12 @@ class SourceSpecificationSpec extends Specification {
       SourceSpecification(Some(sInput), Some(sTag)).typeAllowed(iTag) must equalTo(false)
     }
 
+    "check isEmpty" in {
+      SourceSpecification(Some("SN1234")).isEmpty must equalTo(false)
+      SourceSpecification(Some(IDFGridConfig.name)).isEmpty must equalTo(false)
+      SourceSpecification(Some("")).isEmpty must equalTo(true)
+    }
+
   }
 }
 
