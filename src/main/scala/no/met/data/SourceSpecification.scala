@@ -157,7 +157,7 @@ object SourceSpecification {
   }
 
 
-  def sql(sources: Seq[String], stNr: String, snNr: Option[String]):String = {
+  def stationWhereClause(sources: Seq[String], stNr: String, snNr: Option[String]):String = {
 
     def querySourceAndSensor(source: String, stNr: String, snNr: Option[String]) : String = {
       val s = source.split(":")

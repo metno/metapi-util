@@ -124,27 +124,27 @@ class SourceSpecificationSpec extends Specification {
 
     "convert list of source and sensor numbers to SQL" in {
       val s = "(stationId = SN12 AND sensorNr = 0) OR (stationId = SN34 AND sensorNr = 1) OR (stationId = SN56 AND sensorNr = 2)"
-      SourceSpecification.sql(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", Some("sensorNr")) must equalTo(s)
+      SourceSpecification.stationWhereClause(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", Some("sensorNr")) must equalTo(s)
     }
 
     "convert list of source with ALL to SQL" in {
       val s = "(stationId = SN12) OR (stationId = SN34) OR (stationId = SN56)"
-      SourceSpecification.sql(Seq("SN12:ALL", "SN34:ALL", "SN56:ALL"), "stationId", Some("sensorNr")) must equalTo(s)
+      SourceSpecification.stationWhereClause(Seq("SN12:ALL", "SN34:ALL", "SN56:ALL"), "stationId", Some("sensorNr")) must equalTo(s)
     }
 
     "convert list of source without sensor numbers to SQL" in {
       val s = "(stationId = SN12 AND sensorNr = 0) OR (stationId = SN34 AND sensorNr = 0) OR (stationId = SN56 AND sensorNr = 0)"
-      SourceSpecification.sql(Seq("SN12", "SN34", "SN56"), "stationId", Some("sensorNr")) must equalTo(s)
+      SourceSpecification.stationWhereClause(Seq("SN12", "SN34", "SN56"), "stationId", Some("sensorNr")) must equalTo(s)
     }
 
     "convert list of mixed source Ids with and without sensor numbers to SQL" in {
       val s = "(stationId = SN12 AND sensorNr = 0) OR (stationId = SN34) OR (stationId = SN56 AND sensorNr = 0)"
-      SourceSpecification.sql(Seq("SN12:0", "SN34:ALL", "SN56"), "stationId", Some("sensorNr")) must equalTo(s)
+      SourceSpecification.stationWhereClause(Seq("SN12:0", "SN34:ALL", "SN56"), "stationId", Some("sensorNr")) must equalTo(s)
     }
 
     "convert list of source and sensor numbers to SQL without a SensorNumber attribute" in {
       val s = "(stationId = SN12) OR (stationId = SN34) OR (stationId = SN56)"
-      SourceSpecification.sql(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", None) must equalTo(s)
+      SourceSpecification.stationWhereClause(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", None) must equalTo(s)
     }
 
     "parse station source name" in {
