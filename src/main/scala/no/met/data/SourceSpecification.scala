@@ -134,6 +134,13 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
   def isEmpty: Boolean = stNames.isEmpty && igNames.isEmpty
 
 
+  // Returns true iff station sources should be included in the processing.
+  def includeStationSources: Boolean = typeAllowed(StationConfig.typeName) && (isEmpty || stationNames.nonEmpty)
+
+  // Returns true iff IDF gridded dataset sources should be included in the processing.
+  def includeIdfGridSources: Boolean = typeAllowed(IDFGridConfig.typeName) && (isEmpty || idfGridNames.nonEmpty)
+
+
   init() // initialize
 }
 

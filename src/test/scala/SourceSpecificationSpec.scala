@@ -239,6 +239,23 @@ class SourceSpecificationSpec extends Specification {
       SourceSpecification(Some("")).isEmpty must equalTo(true)
     }
 
+    "check includeSources" in {
+      val sInput = "SN1234"
+      val iInput = IDFGridConfig.name
+      val sTag = StationConfig.typeName
+      val iTag = IDFGridConfig.typeName
+
+      SourceSpecification(Some(sInput)        ).includeStationSources must equalTo(true)
+      SourceSpecification(Some("")            ).includeStationSources must equalTo(true)
+      SourceSpecification(Some(""), Some(sTag)).includeStationSources must equalTo(true)
+      SourceSpecification(Some(""), Some(iTag)).includeStationSources must equalTo(false)
+
+      SourceSpecification(Some(iInput)        ).includeIdfGridSources must equalTo(true)
+      SourceSpecification(Some("")            ).includeIdfGridSources must equalTo(true)
+      SourceSpecification(Some(""), Some(iTag)).includeIdfGridSources must equalTo(true)
+      SourceSpecification(Some(""), Some(sTag)).includeIdfGridSources must equalTo(false)
+    }
+
   }
 }
 
