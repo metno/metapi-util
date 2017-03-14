@@ -41,7 +41,7 @@ object AnormUtil {
       val toBeReplaced = "{%s}" format tag
       val tags = (1 to size) map ("%s%d" format (tag, _))
       val tagsWithBraces = tags map ("{%s}" format _)
-      val replacement = "(%s)" format (tagsWithBraces mkString ",")
+      val replacement = "%s" format (tagsWithBraces mkString ",")
       result = result replace (toBeReplaced, replacement)
     })
     result
