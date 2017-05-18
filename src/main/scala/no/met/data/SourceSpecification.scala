@@ -32,7 +32,7 @@ import IDFGridConfig._
 import play.api.Logger
 
 
-class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None) {
+class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None, allowWildcards: Boolean = false) {
 
   // Type 1: Stations
   private var stNames: Seq[String] = Seq[String]() // complete station names, including "SN" prefix
@@ -84,9 +84,9 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
       }
     }
 
-    // at this point, any remaining sources are either station sources or misspelled IDF gridded dataset names
+    // at this point, any remaining sources are either station sources (possibly including wildcards) or misspelled IDF gridded dataset names
     if (typeAllowed(StationConfig.typeName)) {
-      stNumbers = sources map (s => SourceSpecification.extractStationNumber(s) match {
+      stNumbers = sources map (s => SourceSpecification.extractStationNumber(s, allowWildcards) match {
         case Some(x) => x
         case None => throw new BadRequestException(
           s"Source misspelled or not found: $s",
@@ -150,13 +150,15 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
  */
 object SourceSpecification {
 
-  def apply(srcstr: Option[String], typestr: Option[String] = None) = new SourceSpecification(srcstr, typestr)
+  def apply(srcstr: Option[String], typestr: Option[String] = None, allowWildcards: Boolean = false): SourceSpecification =
+    new SourceSpecification(srcstr, typestr, allowWildcards)
 
   private def stationPrefix = "SN"
 
   // Validates and returns a station number, i.e. the part of the station name after the "SN" prefix.
-  private def extractStationNumber(stationName: String): Option[String] = {
-    val pattern = s"""(?i)$stationPrefix(\\d+([:](([\\d+])|(?i)all))?)""".r
+  private def extractStationNumber(stationName: String, allowWildcards: Boolean = false): Option[String] = {
+    val numberPart = if (allowWildcards) "[\\d*]+" else "\\d+"
+    val pattern = s"""(?i)$stationPrefix($numberPart([:](([\\d+])|(?i)all))?)""".r
     stationName match {
       case pattern(x,_,_,_) => Some(x)
       case _ => None
@@ -166,21 +168,23 @@ object SourceSpecification {
 
   def stationWhereClause(sources: Seq[String], stNr: String, snNr: Option[String]):String = {
 
-    def querySourceAndSensor(source: String, stNr: String, snNr: Option[String]) : String = {
+    def sourceMatch(sourceId: String): String = if (sourceId.contains('*')) s"$stNr::text LIKE '${sourceId.replace('*', '%')}'" else s"$stNr = $sourceId"
+
+    def querySourceAndSensor(source: String) : String = {
       val s = source.split(":")
       val sourceId = s(0)
       val sensorId = if (s.length > 1) s(1) else "0"
       if (snNr.isEmpty) {
-        s"""($stNr = $sourceId)"""
+        s"(${sourceMatch(sourceId)})"
       } else {
         sensorId.toUpperCase match {
-          case "ALL" => s"""($stNr = $sourceId)"""
-          case _ => s"""($stNr = $sourceId AND ${snNr.get} = $sensorId)"""
+          case "ALL" => s"(${sourceMatch(sourceId)})"
+          case _ => s"(${sourceMatch(sourceId)} AND ${snNr.get} = $sensorId)"
         }
       }
     }
 
-    sources.map(querySourceAndSensor(_, stNr, snNr)).mkString(" OR ")
+    sources.map(querySourceAndSensor(_)).mkString(" OR ")
 
   }
 

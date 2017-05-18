@@ -147,6 +147,18 @@ class SourceSpecificationSpec extends Specification {
       SourceSpecification.stationWhereClause(Seq("SN12:0", "SN34:1", "SN56:2"), "stationId", None) must equalTo(s)
     }
 
+    "convert list of source and sensor numbers to SQL with wildcards" in {
+      val s = "(stationId::text LIKE 'SN%2' AND sensorNr = 0) OR (stationId = SN34 AND sensorNr = 1) OR (stationId = SN56 AND sensorNr = 2)"
+      SourceSpecification.stationWhereClause(Seq("SN*2:0", "SN34:1", "SN56:2"), "stationId", Some("sensorNr")) must equalTo(s)
+    }
+
+    "parse single source with wildcards" in {
+      val s = Seq("12*4")
+      SourceSpecification(Some("SN12*4"), None, true).stationNumbers must equalTo(s)
+    }
+
+    // add more tests for different combinations involving the allowWildcards parameter! ... TBD
+
     "parse station source name" in {
       val s = Seq("SN1234")
       SourceSpecification(Some(s.head)).stationNames must equalTo(s)
