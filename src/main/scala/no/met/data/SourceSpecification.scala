@@ -94,6 +94,8 @@ class SourceSpecification(srcstr: Option[String], typestr: Option[String] = None
             val prefix = SourceSpecification.stationPrefix
             s"A station name must have the form $prefix<int>[:<int>|all] (e.g. ${prefix}18700, ${prefix}18700:0, " +
               s"or ${prefix}18700:all, where the content behind a colon specifies the sensor channel(s))." +
+              (if (allowWildcards) s" The integer after '${prefix}' may contain asterisk characters to represent zero or more digits" +
+                s" (e.g. ${prefix}18*7* matches ${prefix}18700)." else "") +
               (if (typeAllowed(IDFGridConfig.typeName)) s" An IDF gridded dataset name must be one of: ${supIdfGridNames.mkString(", ")}." else "")
           })
         )
