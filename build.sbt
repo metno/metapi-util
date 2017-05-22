@@ -14,6 +14,7 @@ lazy val root = (project in file("."))
 // Dependencies
 // ----------------------------------------------------------------------
 libraryDependencies ++= Seq(
+  jdbc,
   "com.typesafe.play" %% "play" % "2.4.8",
   "com.typesafe.play" %% "play-test" % "2.4.8",
   "com.typesafe.play" %% "play-json" % "2.4.8",
