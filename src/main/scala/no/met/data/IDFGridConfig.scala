@@ -28,7 +28,7 @@ package no.met.data
 object IDFGridConfig {
   def typeName: String = "InterpolatedDataset"
   // WARNING: Hard-coded values may need to be updated upon changes to source data.
-  def name: String = "idf_bma1km_v1"
+  def name: String = "idf_bma1km"
   def diskName: String = "idf_grid_interpolated_1km" // TBD: use name for diskName once directory has been renamed to the former
   def validFrom: String = "1957-01-01T00:00:00Z"
   def validTo: String = "2016-01-01T00:00:00Z"
