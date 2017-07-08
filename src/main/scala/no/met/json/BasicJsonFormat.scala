@@ -41,8 +41,6 @@ import no.met.geometry._
  */
 class BasicJsonFormat {
 
-  implicit val levelWrites = Json.writes[Level]
-
   implicit val geometryPropertyWrites = Json.writes[GeometryProperty]
 
   implicit val pointWrites: Writes[Point] = (
